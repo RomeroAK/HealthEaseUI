@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import {AuthService} from '../../../../services/authService/auth.service';
-import {PatientServiceService} from '../../../../services/patientProfileService/patient-service.service';
+import {AuthService} from '../../../services/authService/auth.service';
+import {PatientServiceService} from '../../../services/patientProfileService/patient-service.service';
 import { Subscription } from 'rxjs';
 
 @Component({

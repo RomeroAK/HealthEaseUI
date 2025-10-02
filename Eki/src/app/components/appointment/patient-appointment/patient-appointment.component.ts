@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {Appointment} from '../../../../model/doctor.related.interfaces';
-import {AppointmentService} from '../../../../services/appointmentService/appointment.service';
-import {AuthService} from '../../../../services/authService/auth.service';
+import {Appointment} from '../../../model/doctor.related.interfaces';
+import {AppointmentService} from '../../../services/appointmentService/appointment.service';
+import {AuthService} from '../../../services/authService/auth.service';
 
 @Component({
   selector: 'app-patient-appointment',
@@ -76,7 +76,7 @@ export class PatientAppointmentComponent implements OnInit {
   }
 
   bookNewAppointment(): void {
-    this.router.navigate(['/find-doctors']);
+    this.router.navigate(['patient/find-doctor']);
   }
 
   getStatusColor(status: string): string {

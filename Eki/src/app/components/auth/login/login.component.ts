@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {error} from 'protractor';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../../../services/authService/auth.service';
+import {AuthService} from '../../../services/authService/auth.service';
 import {Router} from '@angular/router';
 
 @Component({

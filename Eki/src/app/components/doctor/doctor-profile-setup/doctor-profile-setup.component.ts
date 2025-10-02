@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {AuthService} from '../../../../services/authService/auth.service';
+import {AuthService} from '../../../services/authService/auth.service';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subject} from 'rxjs';
-import {DoctorService} from '../../../../services/doctorProfileService/doctor.service';
+import {DoctorService} from '../../../services/doctorProfileService/doctor.service';
 import {takeUntil} from 'rxjs/operators';
-import {Doctor, DoctorSpecialization} from '../../../../model/doctor.related.interfaces';
+import {Doctor, DoctorSpecialization} from '../../../model/doctor.related.interfaces';
 
 
 @Component({

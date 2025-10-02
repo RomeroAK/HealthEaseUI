@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { DoctorProfileSetupComponent } from '../doctor-profile-setup/doctor-profile-setup.component';
-import {AuthService} from '../../../../services/authService/auth.service';
-import {DoctorService} from '../../../../services/doctorProfileService/doctor.service';
+import {AuthService} from '../../../services/authService/auth.service';
+import {DoctorService} from '../../../services/doctorProfileService/doctor.service';
 
 
 describe('DoctorProfileSetupComponent', () => {

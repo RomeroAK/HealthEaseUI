@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from '../../../../services/authService/auth.service';
+import {AuthService} from '../../../services/authService/auth.service';
 import {Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Patient} from '../../../../model/patient.model';
-import {PatientServiceService} from '../../../../services/patientProfileService/patient-service.service';
+import {Patient} from '../../../model/patient.model';
+import {PatientServiceService} from '../../../services/patientProfileService/patient-service.service';
 
 
 @Component({
@@ -50,7 +50,7 @@ export class PatientProfileSetupComponent implements OnInit {
   ngOnInit(): void {
     this.loadExistingProfile();
     this.setupFormValidation();
-    
+
     const insuranceInfo = this.profileForm.get('insuranceInfo');
     const primaryInsurance = insuranceInfo?.get('primaryInsurance');
     const hasInsuranceControl = insuranceInfo?.get('hasInsurance');

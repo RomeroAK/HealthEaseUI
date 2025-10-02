@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {AuthService} from '../../../../services/authService/auth.service';
-import {Appointment, Doctor, DoctorSearchCriteria, MedicalRecord} from '../../../../model/doctor.related.interfaces';
+import {AuthService} from '../../../services/authService/auth.service';
+import {Appointment, Doctor, DoctorSearchCriteria, MedicalRecord} from '../../../model/doctor.related.interfaces';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
-import {Prescription} from '../../../../model/user.model';
+import {Prescription} from '../../../model/user.model';
 import {forkJoin, Subject} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {DoctorService} from '../../../../services/doctorProfileService/doctor.service';
-import {Patient} from '../../../../model/patient.model';
-import {PatientServiceService} from '../../../../services/patientProfileService/patient-service.service';
+import {DoctorService} from '../../../services/doctorProfileService/doctor.service';
+import {Patient} from '../../../model/patient.model';
+import {PatientServiceService} from '../../../services/patientProfileService/patient-service.service';
 
 @Component({
   selector: 'app-patient-dashboard',
