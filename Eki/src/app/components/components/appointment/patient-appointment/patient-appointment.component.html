@@ -1,0 +1,63 @@
+<div class="appointments-container">
+  <header class="page-header">
+    <h1>My Appointments</h1>
+    <button (click)="bookNewAppointment()" class="btn-new-appointment">
+      + New Appointment
+    </button>
+  </header>
+
+  <div class="tabs">
+    <button
+      [class.active]="activeTab === 'upcoming'"
+      (click)="switchTab('upcoming')"
+      class="tab-btn"
+    >
+      Upcoming
+    </button>
+    <button
+      [class.active]="activeTab === 'past'"
+      (click)="switchTab('past')"
+      class="tab-btn"
+    >
+      Past
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading appointments...</div>
+
+  <div class="appointments-list">
+    <div *ngFor="let appointment of appointments" class="appointment-card">
+      <div class="appointment-header">
+        <div class="appointment-date-badge">
+          <span class="day">{{ appointment.appointmentDate | date:'dd' }}</span>
+          <span class="month">{{ appointment.appointmentDate | date:'MMM' }}</span>
+        </div>
+
+        <div class="appointment-main-info">
+          <h3>{{ appointment.doctorName }}</h3>
+          <p class="time">{{ appointment.startTime }} - {{ appointment.endTime }}</p>
+        </div>
+
+        <span class="status-badge" [style.background-color]="getStatusColor(appointment.status)">
+          {{ appointment.status }}
+        </span>
+      </div>
+
+      <div class="appointment-details">
+        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+        <p *ngIf="appointment.notes"><strong>Notes:</strong> {{ appointment.notes }}</p>
+      </div>
+
+      <div class="appointment-actions" *ngIf="activeTab === 'upcoming' && appointment.status === 'SCHEDULED'.toLowerCase()">
+        <button (click)="viewDetails(appointment.id)" class="btn-view">View Details</button>
+        <button (click)="rescheduleAppointment(appointment.id)" class="btn-reschedule">Reschedule</button>
+        <button (click)="cancelAppointment(appointment.id)" class="btn-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && appointments.length === 0" class="empty-state">
+    <p>No {{ activeTab }} appointments</p>
+    <button (click)="bookNewAppointment()" class="btn-primary">Book Appointment</button>
+  </div>
+</div>

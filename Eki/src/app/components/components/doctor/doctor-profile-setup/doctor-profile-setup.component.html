@@ -1,0 +1,126 @@
+<!-- Doctor Profile Setup Page with Consistent Styling -->
+<div class="doctor-profile-setup-bg">
+
+
+  <div class="doctor-profile-setup-container">
+    <!-- Doctor Profile Form HTML -->
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="doctor-form">
+      <h2>Doctor Profile Setup</h2>
+
+      <div formGroupName="doctorInfo">
+        <!-- Personal Info -->
+        <fieldset>
+          <legend>Personal Information</legend>
+
+          <label>First Name</label>
+          <input formControlName="firstName" type="text" />
+          <div *ngIf="profileForm.get('doctorInfo.firstName')?.invalid && profileForm.get('doctorInfo.firstName')?.touched">
+            <small>First name is required (2–50 characters).</small>
+          </div>
+
+          <label>Last Name</label>
+          <input formControlName="lastName" type="text" />
+
+          <label>Full Name</label>
+          <input formControlName="fullName" type="text" />
+
+          <label>Email</label>
+          <input formControlName="email" type="email" />
+
+          <label>Telephone</label>
+          <input formControlName="telephone" type="text" />
+          <div *ngIf="profileForm.get('doctorInfo.telephone')?.invalid && profileForm.get('doctorInfo.telephone')?.touched">
+            <small>Enter a valid South African phone number.</small>
+          </div>
+
+          <label>Gender</label>
+          <select formControlName="gender">
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </fieldset>
+
+        <!-- Professional Info -->
+        <fieldset>
+          <legend>Professional Details</legend>
+
+          <label>Specialization</label>
+          <input formControlName="specialization" type="text" />
+
+          <label>License Number</label>
+          <input formControlName="licenseNumber" type="text" />
+
+          <label>Consultation Fee</label>
+          <input formControlName="consultationFee" type="number" />
+
+          <label>Accepted Insurance</label>
+          <input formControlName="acceptedInsurance" type="text" placeholder="Comma-separated list" />
+
+          <label>Private Practice</label>
+          <input type="checkbox" formControlName="isPrivatePractice" />
+
+          <label>Practice Name</label>
+          <input formControlName="practiceName" type="text" />
+
+          <label>Hospital Name</label>
+          <input formControlName="hospitalName" type="text" />
+        </fieldset>
+
+        <!-- Addresses -->
+        <fieldset>
+          <legend>Clinic Address</legend>
+          <div formGroupName="clinicAddress">
+            <label>Street</label>
+            <input formControlName="street" type="text" />
+            <label>City</label>
+            <input formControlName="city" type="text" />
+            <label>Province</label>
+            <input formControlName="province" type="text" />
+            <label>Postal Code</label>
+            <input formControlName="postalCode" type="text" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Hospital Address</legend>
+          <div formGroupName="hospitalAddress">
+            <label>Street</label>
+            <input formControlName="street" type="text" />
+            <label>City</label>
+            <input formControlName="city" type="text" />
+            <label>Province</label>
+            <input formControlName="province" type="text" />
+            <label>Postal Code</label>
+            <input formControlName="postalCode" type="text" />
+          </div>
+        </fieldset>
+
+        <!-- Bio and Status -->
+        <fieldset>
+          <legend>Additional Info</legend>
+
+          <label>Bio</label>
+          <textarea formControlName="bio"></textarea>
+
+          <label>Active</label>
+          <input type="checkbox" formControlName="isActive" />
+        </fieldset>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="!profileForm.valid || isSubmitting"
+      >
+        <i class="fas fa-check" *ngIf="!isSubmitting"></i>
+        <i class="fas fa-spinner fa-spin" *ngIf="isSubmitting"></i>
+        {{ isSubmitting ? 'Saving...' : 'Update Profile' }}
+      </button>
+    </form>
+  </div>
+
+  <button class="btn btn-secondary left-logout-btn" (click)="logout()">
+    Logout
+  </button>
+</div>

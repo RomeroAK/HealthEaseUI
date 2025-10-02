@@ -1,0 +1,558 @@
+<!-- patient-profile-view.component.html -->
+<div class="profile-view-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading your profile...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <div class="error-icon">❌</div>
+    <h3>Unable to Load Profile</h3>
+    <p>{{error}}</p>
+    <button class="retry-btn" (click)="loadPatientProfile()">
+      <i class="fas fa-refresh"></i> Retry
+    </button>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading && !error && patientProfile" class="profile-content">
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-header-content">
+        <div class="profile-picture-section">
+          <div class="profile-picture" *ngIf="patientProfile.profilePicture; else defaultAvatar">
+            <img [src]="patientProfile.profilePicture" [alt]="patientProfile.firstName + ' ' + patientProfile.lastName">
+          </div>
+          <ng-template #defaultAvatar>
+            <div class="default-avatar">
+              {{patientProfile.firstName?.charAt(0)}}{{patientProfile.lastName?.charAt(0)}}
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="profile-basic-info">
+          <h1>{{patientProfile.firstName}} {{patientProfile.lastName}}</h1>
+          <div class="basic-details">
+            <span class="detail-item">
+              <i class="fas fa-birthday-cake"></i>
+              {{calculateAge(patientProfile.dateOfBirth)}} years old
+            </span>
+            <span class="detail-item">
+              <i class="fas fa-venus-mars"></i>
+              {{patientProfile.gender || 'Not specified'}}
+            </span>
+            <span class="detail-item">
+              <i class="fas fa-id-card"></i>
+              {{patientProfile.idNumber || 'Not specified'}}
+            </span>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button class="action-btn primary" (click)="editProfile()">
+            <i class="fas fa-edit"></i> Edit Profile
+          </button>
+          <button class="action-btn secondary">
+            <i class="fas fa-download"></i> Download PDF
+          </button>
+          <button class="action-btn secondary" (click)="shareProfile()">
+            <i class="fas fa-share"></i> Share
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Completion Status -->
+      <div class="completion-status" *ngIf="profileCompletion">
+        <div class="completion-header">
+          <h3>Profile Completion</h3>
+          <span class="completion-percentage" [style.color]="getCompletionColor(profileCompletion.completionPercentage)">
+            {{profileCompletion.completionPercentage}}%
+          </span>
+        </div>
+        <div class="completion-bar">
+          <div class="completion-fill"
+               [style.width.%]="profileCompletion.completionPercentage"
+               [style.background-color]="getCompletionColor(profileCompletion.completionPercentage)">
+          </div>
+        </div>
+        <div class="completion-stats">
+          <span>{{profileCompletion.completedFields}} of {{profileCompletion.totalFields}} fields completed</span>
+          <span class="completion-status-text" *ngIf="profileCompletion.isComplete; else incompleteStatus">
+            ✅ Profile Complete
+          </span>
+          <ng-template #incompleteStatus>
+            <span class="completion-status-text incomplete">
+              ⚠️ {{profileCompletion.missingFields?.length || 0}} fields missing
+            </span>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="profile-tabs">
+      <button *ngFor="let tab of tabs"
+              class="tab-btn"
+              [class.active]="activeTab === tab.id"
+              (click)="setActiveTab(tab.id)">
+        <span class="tab-icon">{{tab.icon}}</span>
+        <span class="tab-label">{{tab.label}}</span>
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+
+      <!-- Personal Information Tab -->
+      <div *ngIf="activeTab === 'personal'" class="tab-panel personal-info">
+        <div class="section-header">
+          <h2>Personal Information</h2>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>Basic Details</h3>
+            <div class="info-row">
+              <label>Full Name:</label>
+              <span>{{patientProfile.firstName}} {{patientProfile.lastName}}</span>
+            </div>
+            <div class="info-row">
+              <label>Date of Birth:</label>
+              <span>{{formatDate(patientProfile.dateOfBirth)}}</span>
+            </div>
+            <div class="info-row">
+              <label>Age:</label>
+              <span>{{calculateAge(patientProfile.dateOfBirth)}} years</span>
+            </div>
+            <div class="info-row">
+              <label>Gender:</label>
+              <span>{{patientProfile.gender || 'Not specified'}}</span>
+            </div>
+            <div class="info-row">
+              <label>ID Number:</label>
+              <span>{{patientProfile.idNumber || 'Not specified'}}</span>
+            </div>
+            <div class="info-row">
+              <label>Marital Status:</label>
+              <span>{{patientProfile.maritalStatus || 'Not specified'}}</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h3>Contact Information</h3>
+            <div class="info-row">
+              <label>Email:</label>
+              <span>{{patientProfile.email || 'Not specified'}}</span>
+            </div>
+            <div class="info-row">
+              <label>Phone Number:</label>
+              <span>{{formatPhoneNumber(patientProfile.phoneNumber)}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.alternatePhoneNumber">
+              <label>Alternate Phone:</label>
+              <span>{{formatPhoneNumber(patientProfile.alternatePhoneNumber)}}</span>
+            </div>
+            <div class="info-row">
+              <label>Preferred Language:</label>
+              <span>{{patientProfile.preferredLanguage || 'English'}}</span>
+            </div>
+          </div>
+
+          <div class="info-card" *ngIf="patientProfile.address">
+            <h3>Address</h3>
+            <div class="address-display">
+              <p>{{patientProfile.address.street}}</p>
+              <p>{{patientProfile.address.suburb}}</p>
+              <p>{{patientProfile.address.city}}, {{patientProfile.address.province}}</p>
+              <p>{{patientProfile.address.postalCode}}</p>
+              <p>{{patientProfile.address.country}}</p>
+            </div>
+          </div>
+
+          <div class="info-card" *ngIf="patientProfile.occupation || patientProfile.employer">
+            <h3>Employment</h3>
+            <div class="info-row" *ngIf="patientProfile.occupation">
+              <label>Occupation:</label>
+              <span>{{patientProfile.occupation}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.employer">
+              <label>Employer:</label>
+              <span>{{patientProfile.employer}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medical History Tab -->
+      <div *ngIf="activeTab === 'medical'" class="tab-panel medical-info">
+        <div class="section-header">
+          <h2>Medical Information</h2>
+        </div>
+
+        <div *ngIf="patientProfile.medicalHistory" class="info-grid">
+          <!-- Basic Medical Info -->
+          <div class="info-card">
+            <h3>Basic Medical Details</h3>
+            <div class="info-row">
+              <label>Blood Type:</label>
+              <span>{{patientProfile.medicalHistory.bloodType || 'Not specified'}}</span>
+            </div>
+            <div class="info-row">
+              <label>Height:</label>
+              <span>{{patientProfile.medicalHistory.height ? patientProfile.medicalHistory.height + ' cm' : 'Not specified'}}</span>
+            </div>
+            <div class="info-row">
+              <label>Weight:</label>
+              <span>{{patientProfile.medicalHistory.weight ? patientProfile.medicalHistory.weight + ' kg' : 'Not specified'}}</span>
+            </div>
+            <div class="info-row" *ngIf="calculateBMI()">
+              <label>BMI:</label>
+              <span>
+                <span class="bmi-value" [style.color]="getBMIColor(calculateBMI()!)">{{calculateBMI()}}</span>
+                <span class="bmi-category">({{getBMICategory(calculateBMI()!)}})</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Lifestyle -->
+          <div class="info-card">
+            <h3>Lifestyle Information</h3>
+            <div class="info-row" *ngIf="patientProfile.medicalHistory.smokingStatus">
+              <label>Smoking Status:</label>
+              <span>{{patientProfile.medicalHistory.smokingStatus}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.medicalHistory.alcoholConsumption">
+              <label>Alcohol Consumption:</label>
+              <span>{{patientProfile.medicalHistory.alcoholConsumption}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.medicalHistory.exerciseFrequency">
+              <label>Exercise Frequency:</label>
+              <span>{{patientProfile.medicalHistory.exerciseFrequency}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.medicalHistory.dietaryRestrictions">
+              <label>Dietary Restrictions:</label>
+              <span>{{patientProfile.medicalHistory.dietaryRestrictions}}</span>
+            </div>
+          </div>
+
+          <!-- Allergies -->
+          <div class="info-card" *ngIf="hasData(patientProfile.medicalHistory.allergies)">
+            <h3>Allergies</h3>
+            <div class="medical-list">
+              <div *ngFor="let allergy of patientProfile.medicalHistory.allergies" class="medical-item allergy">
+                <div class="item-header">
+                  <span class="item-name">{{allergy.name}}</span>
+                  <span class="severity-badge" [class]="'severity-' + (allergy.severity || 'unknown').toLowerCase()">
+                    {{allergy.severity || 'Unknown'}}
+                  </span>
+                </div>
+                <p *ngIf="allergy.description" class="item-description">{{allergy.description}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chronic Conditions -->
+          <div class="info-card" *ngIf="hasData(patientProfile.medicalHistory.chronicConditions)">
+            <h3>Chronic Conditions</h3>
+            <div class="medical-list">
+              <div *ngFor="let condition of patientProfile.medicalHistory.chronicConditions" class="medical-item condition">
+                <div class="item-header">
+                  <span class="item-name">{{condition.name}}</span>
+                  <span class="item-date" *ngIf="condition.startDate">Since {{formatDate(condition.startDate)}}</span>
+                </div>
+                <p *ngIf="condition.notes" class="item-description">{{condition.notes}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current Medications -->
+          <div class="info-card" *ngIf="hasData(patientProfile.medicalHistory.currentMedications)">
+            <h3>Current Medications</h3>
+            <div class="medical-list">
+              <div *ngFor="let medication of patientProfile.medicalHistory.currentMedications" class="medical-item medication">
+                <div class="item-header">
+                  <span class="item-name">{{medication.name}}</span>
+                </div>
+                <p *ngIf="medication.description" class="item-dosage">{{medication.description}}</p>
+                <p *ngIf="medication.notes" class="item-description">{{medication.notes}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Previous Surgeries -->
+          <div class="info-card" *ngIf="hasData(patientProfile.medicalHistory.previousSurgeries)">
+            <h3>Previous Surgeries</h3>
+            <div class="medical-list">
+              <div *ngFor="let surgery of patientProfile.medicalHistory.previousSurgeries" class="medical-item surgery">
+                <div class="item-header">
+                  <span class="item-name">{{surgery.name}}</span>
+                  <span class="item-date" *ngIf="surgery.startDate">{{formatDate(surgery.startDate)}}</span>
+                </div>
+                <p *ngIf="surgery.notes" class="item-description">{{surgery.notes}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Family Medical History -->
+          <div class="info-card full-width" *ngIf="patientProfile.medicalHistory.familyMedicalHistory">
+            <h3>Family Medical History</h3>
+            <div class="text-content">
+              {{patientProfile.medicalHistory.familyMedicalHistory}}
+            </div>
+          </div>
+
+          <!-- Vaccination Status -->
+          <div class="info-card" *ngIf="patientProfile.medicalHistory.vaccinationStatus">
+            <h3>Vaccination Status</h3>
+            <div class="text-content">
+              {{patientProfile.medicalHistory.vaccinationStatus}}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!patientProfile.medicalHistory" class="no-data">
+          <div class="no-data-icon">🏥</div>
+          <h3>No Medical Information</h3>
+          <p>No medical history has been recorded yet.</p>
+          <button class="action-btn primary" (click)="editProfile()">Add Medical Information</button>
+        </div>
+      </div>
+
+      <!-- Emergency Contacts Tab -->
+      <div *ngIf="activeTab === 'emergency'" class="tab-panel emergency-contacts">
+        <div class="section-header">
+          <h2>Emergency Contacts</h2>
+        </div>
+
+        <div *ngIf="hasData(patientProfile.emergencyContacts)" class="contacts-grid">
+          <div *ngFor="let contact of patientProfile.emergencyContacts; let i = index"
+               class="contact-card"
+               [class.primary-contact]="contact.isPrimary">
+            <div class="contact-header">
+              <h3>{{contact.name}}
+                <span class="primary-badge" *ngIf="contact.isPrimary">PRIMARY</span>
+              </h3>
+              <span class="relationship">{{contact.relationship}}</span>
+            </div>
+
+            <div class="contact-details">
+              <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <span>{{formatPhoneNumber(contact.phoneNumber)}}</span>
+              </div>
+
+              <div class="contact-item" *ngIf="contact.alternatePhoneNumber">
+                <i class="fas fa-mobile-alt"></i>
+                <span>{{formatPhoneNumber(contact.alternatePhoneNumber)}}</span>
+              </div>
+
+              <div class="contact-item" *ngIf="contact.email">
+                <i class="fas fa-envelope"></i>
+                <span>{{contact.email}}</span>
+              </div>
+
+              <div class="contact-item" *ngIf="contact.address">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{contact.address}}</span>
+              </div>
+            </div>
+
+            <div class="contact-permissions" *ngIf="contact.canMakeDecisions">
+              <div class="permission-badge">
+                <i class="fas fa-user-md"></i>
+                Can make medical decisions
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!hasData(patientProfile.emergencyContacts)" class="no-data">
+          <div class="no-data-icon">🚨</div>
+          <h3>No Emergency Contacts</h3>
+          <p>No emergency contacts have been added yet.</p>
+          <button class="action-btn primary" (click)="editProfile()">Add Emergency Contacts</button>
+        </div>
+      </div>
+
+      <!-- Insurance Tab -->
+      <div *ngIf="activeTab === 'insurance'" class="tab-panel insurance-info">
+        <div class="section-header">
+          <h2>Insurance Information</h2>
+        </div>
+
+        <div *ngIf="patientProfile.insurance" class="info-grid">
+          <div class="info-card">
+            <h3>Primary Insurance</h3>
+            <div class="info-row">
+              <label>Provider:</label>
+              <span>{{patientProfile.insurance.provider}}</span>
+            </div>
+            <div class="info-row">
+              <label>Policy Number:</label>
+              <span>{{patientProfile.insurance.policyNumber}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.insurance.planName">
+              <label>Plan Name:</label>
+              <span>{{patientProfile.insurance.planName}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.insurance.groupNumber">
+              <label>Group Number:</label>
+              <span>{{patientProfile.insurance.groupNumber}}</span>
+            </div>
+          </div>
+
+          <div class="info-card" *ngIf="patientProfile.insurance.effectiveDate || patientProfile.insurance.expirationDate">
+            <h3>Coverage Dates</h3>
+            <div class="info-row" *ngIf="patientProfile.insurance.effectiveDate">
+              <label>Effective Date:</label>
+              <span>{{formatDate(patientProfile.insurance.effectiveDate)}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.insurance.expirationDate">
+              <label>Expiration Date:</label>
+              <span>{{formatDate(patientProfile.insurance.expirationDate)}}</span>
+            </div>
+          </div>
+
+          <div class="info-card" *ngIf="patientProfile.insurance.copayAmount || patientProfile.insurance.deductibleAmount">
+            <h3>Financial Information</h3>
+            <div class="info-row" *ngIf="patientProfile.insurance.copayAmount">
+              <label>Copay Amount:</label>
+              <span>R{{patientProfile.insurance.copayAmount}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.insurance.deductibleAmount">
+              <label>Deductible Amount:</label>
+              <span>R{{patientProfile.insurance.deductibleAmount}}</span>
+            </div>
+          </div>
+
+          <div class="info-card" *ngIf="patientProfile.medicalAidNumber || patientProfile.insurance.dependentCode">
+            <h3>Medical Aid Details</h3>
+            <div class="info-row" *ngIf="patientProfile.medicalAidNumber">
+              <label>Medical Aid Number:</label>
+              <span>{{patientProfile.medicalAidNumber}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.insurance.dependentCode">
+              <label>Dependent Code:</label>
+              <span>{{patientProfile.insurance.dependentCode}}</span>
+            </div>
+            <div class="info-row">
+              <label>Authorization Required:</label>
+              <span>{{patientProfile.insurance.authorizationRequired ? 'Yes' : 'No'}}</span>
+            </div>
+          </div>
+
+          <!-- Secondary Insurance -->
+          <div class="info-card" *ngIf="patientProfile.insurance.secondaryProvider">
+            <h3>Secondary Insurance</h3>
+            <div class="info-row">
+              <label>Provider:</label>
+              <span>{{patientProfile.insurance.secondaryProvider}}</span>
+            </div>
+            <div class="info-row" *ngIf="patientProfile.insurance.secondaryPolicyNumber">
+              <label>Policy Number:</label>
+              <span>{{patientProfile.insurance.secondaryPolicyNumber}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!patientProfile.insurance" class="no-data">
+          <div class="no-data-icon">💳</div>
+          <h3>No Insurance Information</h3>
+          <p>No insurance information has been provided.</p>
+          <button class="action-btn primary" (click)="editProfile()">Add Insurance Information</button>
+        </div>
+      </div>
+
+      <!-- Preferences Tab -->
+      <div *ngIf="activeTab === 'preferences'" class="tab-panel preferences">
+        <div class="section-header">
+          <h2>Preferences</h2>
+        </div>
+
+        <div *ngIf="patientProfile.preferences" class="info-grid">
+          <div class="info-card">
+            <h3>General Preferences</h3>
+            <div class="info-row">
+              <label>Preferred Doctor Gender:</label>
+              <span>{{patientProfile.preferences.preferredDoctorGender || 'No preference'}}</span>
+            </div>
+            <div class="info-row">
+              <label>Preferred Language:</label>
+              <span>{{patientProfile.preferences.preferredLanguage || 'English'}}</span>
+            </div>
+          </div>
+
+          <div class="info-card" *ngIf="patientProfile.preferences.communicationPreferences">
+            <h3>Communication Preferences</h3>
+            <div class="preferences-list">
+              <div class="preference-item">
+                <span class="preference-label">Email Reminders:</span>
+                <span class="preference-value" [class.enabled]="patientProfile.preferences.communicationPreferences.emailReminders">
+                  {{patientProfile.preferences.communicationPreferences.emailReminders ? 'Enabled' : 'Disabled'}}
+                </span>
+              </div>
+              <div class="preference-item">
+                <span class="preference-label">SMS Reminders:</span>
+                <span class="preference-value" [class.enabled]="patientProfile.preferences.communicationPreferences.smsReminders">
+                  {{patientProfile.preferences.communicationPreferences.smsReminders ? 'Enabled' : 'Disabled'}}
+                </span>
+              </div>
+              <div class="preference-item">
+                <span class="preference-label">Appointment Confirmations:</span>
+                <span class="preference-value" [class.enabled]="patientProfile.preferences.communicationPreferences.appointmentConfirmations">
+                  {{patientProfile.preferences.communicationPreferences.appointmentConfirmations ? 'Enabled' : 'Disabled'}}
+                </span>
+              </div>
+              <div class="preference-item">
+                <span class="preference-label">Test Results:</span>
+                <span class="preference-value" [class.enabled]="patientProfile.preferences.communicationPreferences.testResults">
+                  {{patientProfile.preferences.communicationPreferences.testResults ? 'Enabled' : 'Disabled'}}
+                </span>
+              </div>
+              <div class="preference-item">
+                <span class="preference-label">Promotional Emails:</span>
+                <span class="preference-value" [class.enabled]="patientProfile.preferences.communicationPreferences.promotionalEmails">
+                  {{patientProfile.preferences.communicationPreferences.promotionalEmails ? 'Enabled' : 'Disabled'}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card" *ngIf="patientProfile.preferences.privacySettings">
+            <h3>Privacy Settings</h3>
+            <div class="preferences-list">
+              <div class="preference-item">
+                <span class="preference-label">Share Data with Research:</span>
+                <span class="preference-value" [class.enabled]="patientProfile.preferences.privacySettings.shareDataWithResearch">
+                  {{patientProfile.preferences.privacySettings.shareDataWithResearch ? 'Enabled' : 'Disabled'}}
+                </span>
+              </div>
+              <div class="preference-item">
+                <span class="preference-label">Allow Marketing Communication:</span>
+                <span class="preference-value" [class.enabled]="patientProfile.preferences.privacySettings.allowMarketingCommunication">
+                  {{patientProfile.preferences.privacySettings.allowMarketingCommunication ? 'Enabled' : 'Disabled'}}
+                </span>
+              </div>
+              <div class="preference-item">
+                <span class="preference-label">Profile Visibility:</span>
+                <span class="preference-value">
+                  {{patientProfile.preferences.privacySettings.profileVisibility || 'Private'}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!patientProfile.preferences" class="no-data">
+          <div class="no-data-icon">⚙️</div>
+          <h3>No Preferences Set</h3>
+          <p>No preferences have been configured yet.</p>
+          <button class="action-btn primary" (click)="editProfile()">Set Preferences</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

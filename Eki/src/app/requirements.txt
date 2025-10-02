@@ -1,0 +1,33 @@
+Phase 1: Authentication & User Management
+- Users can register as either a Patient or a Doctor.
+- Users can log in with their credentials.
+- After login: Patients land on the Patient Dashboard; Doctors land on the Doctor Dashboard.
+- Both Patients and Doctors can log out and return to the login screen.
+Phase 2: Dashboards
+- Patient Dashboard includes: Health Risk Assessment, Appointments, and Medical Records.
+- Doctor Dashboard includes: Upcoming Appointments and My Patients.
+Phase 3: Patient Features
+- Patients can access Health Risk Assessment.
+- Patients can view their Appointments list.
+- Patients can view their Medical Records (Prescriptions, Lab Tests, Notes).
+- Patients can Decline an Appointment (with optional reason).
+- Patients can Reschedule an Appointment by selecting a new date and time.
+Phase 4: Doctor Features
+- Doctors can view Upcoming Appointments.
+- Doctors can view Patients list linked to them.
+- Doctors can view Patient Profiles (basic details + button to access records).
+- Doctors can view Medical Records for patients (Prescriptions, Lab Tests, Notes/X-rays).
+- Doctors can add new medical records via a popup form (Date, Notes, Prescription, Lab Tests).
+- Doctors can Decline an Appointment (with optional reason).
+- Doctors can Reschedule an Appointment (set new date/time).
+Phase 5: Appointment Management (Shared Features)
+- Both Patients and Doctors can view a list of appointments.
+- Both Patients and Doctors can Decline appointments (with optional reason).
+- Both Patients and Doctors can Reschedule appointments (new date/time).
+- Declined or Rescheduled appointments remain in the list with updated status (not deleted).
+Phase 6: AI Integration (Patient Only)
+- Patients can interact with an AI Assistant (floating button).
+- AI Assistant allows patients to enter symptoms (e.g., headache, flu, back pain).
+- AI asks follow-up questions.
+- AI provides a preliminary risk assessment (low, medium, high).
+- AI suggests doctor recommendations (General Practitioner for flu, Specialist for back pain).

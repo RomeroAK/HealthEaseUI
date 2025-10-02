@@ -1,0 +1,102 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>HealthEase</h1>
+      <h2>Create Account</h2>
+      <p>Join our healthcare platform</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          class="form-control"
+          [class.error]="isFieldInvalid('username')"
+          placeholder="Choose a username">
+        <div class="error-message" *ngIf="isFieldInvalid('username')">
+          <span *ngIf="getError('username','required')">Username is required</span>
+          <span *ngIf="getError('username','minLength')">Username must be at least 3 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.error]="isFieldInvalid('email')"
+          placeholder="Enter your email">
+        <div class="error-message" *ngIf="isFieldInvalid('email')">
+          <span *ngIf="getError('email', 'required')">Email is required</span>
+          <span *ngIf="getError('email', 'email')">Please enter a valid email</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-control"
+          [class.error]="isFieldInvalid('password')"
+          placeholder="Create a password">
+        <div class="error-message" *ngIf="isFieldInvalid('password')">
+          <span *ngIf="getError('password','required')">Password is required</span>
+          <span *ngIf="getError('password','minLength')">Password must be at least 6 characters</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          class="form-control"
+          [class.error]="isFieldInvalid('confirmPassword')"
+          placeholder="Confirm your password">
+        <div class="error-message" *ngIf="isFieldInvalid('confirmPassword')">
+          <span *ngIf="getError('confirmPassword','required')">Please confirm your password</span>
+          <span *ngIf="getError('confirmPassword','passwordMismatch')">Passwords don't match</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="userType">Account Type</label>
+        <select
+          id="userType"
+          formControlName="userType"
+          class="form-control"
+          [class.error]="isFieldInvalid('userType')">
+          <option value="">Select account type</option>
+          <option value="patient">Patient</option>
+          <option value="doctor">Doctor</option>
+          <option value="admin">Admin</option>
+        </select>
+        <div class="error-message" *ngIf="isFieldInvalid('userType')">
+          Please select an account type
+        </div>
+      </div>
+      <button type="submit" class="auth-button" [disabled]="loading">
+        <span *ngIf="loading" class="loading-spinner"></span>
+        {{ loading ? 'Creating Account...' : 'Create Account' }}
+      </button>
+      <div class="error-message" *ngIf="error">
+        {{ error }}
+      </div>
+      <div class="success-message" *ngIf="success">
+        {{ success }}
+      </div>
+    </form>
+    <div class="auth-footer">
+      <p>Already have an account?
+        <a (click)="goToLogin()" class="auth-link">Sign in here</a>
+      </p>
+    </div>
+  </div>
+</div>

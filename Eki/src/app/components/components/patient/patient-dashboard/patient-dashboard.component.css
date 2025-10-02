@@ -1,0 +1,206 @@
+/* Layout */
+.container {
+  max-width: 1200px;
+}
+
+/* Dashboard full-page background */
+.dashboard-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+}
+
+/* Centered dashboard card container */
+.dashboard-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+  max-width: 1100px;
+  width: 100%;
+  margin: 40px auto 0 auto;
+  padding: 32px 24px 24px 24px;
+}
+
+/* Navbar */
+.navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 2rem;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  border-radius: 0;
+}
+
+.navbar-brand {
+  color: #fff !important;
+  font-weight: bold;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+}
+
+.navbar .btn {
+  font-weight: 500;
+  border-radius: 25px;
+  margin-left: 8px;
+}
+
+/* Headings */
+h2 {
+  color: #43a047;
+}
+
+/* Cards */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(102,126,234,0.08);
+  border: none;
+  margin-bottom: 2rem;
+}
+
+.card-header {
+  background: linear-gradient(90deg, #667eea 60%, #43e97b 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.15rem;
+  border-radius: 12px 12px 0 0;
+  padding: 1rem 1.5rem;
+}
+
+.card-body {
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+  padding: 1.5rem;
+}
+
+/* Appointments Table */
+.table thead {
+  background: #e1bee7;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+  font-size: 0.97rem;
+}
+
+.table td span {
+  font-weight: bold;
+}
+
+/* Cancel Button */
+.btn-outline-danger {
+  border-color: #e53935;
+  color: #e53935;
+}
+
+.btn-outline-danger:hover {
+  background-color: #e53935;
+  color: #fff;
+}
+
+/* Doctor Cards */
+.doctor-card {
+  background: #f1f8e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.text-success {
+  color: #2ecc71 !important;
+}
+
+/* Floating AI Assistant Button */
+.ai-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(102,126,234,0.18);
+  cursor: pointer;
+  transition: background 0.3s;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-button:hover {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: #333;
+}
+
+/* Doctor Search/More Button */
+.doctor-search-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 500;
+  border-radius: 25px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.doctor-search-btn i.fa-arrow-right {
+  font-size: 1em;
+}
+
+.doctor-search-btn:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dashboard-container {
+    padding: 16px 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    margin: 24px 0 0 0;
+    padding: 8px 2px;
+  }
+
+  .navbar {
+    padding: 0.5rem 1rem;
+  }
+
+  .ai-button {
+    padding: 10px 18px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    margin: 12px 0 0 0;
+    padding: 2px 0;
+  }
+
+  .ai-button {
+    right: 10px;
+    bottom: 10px;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+  }
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

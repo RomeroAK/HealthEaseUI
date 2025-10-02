@@ -1,0 +1,111 @@
+<!-- Dashboard full-page background and centered card container -->
+<div class="dashboard-bg">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand">Patient Portal</a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item me-2">
+            <button class="btn btn-outline-light" (click)="viewProfile()">View Profile</button>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-light text-danger fw-bold" (click)="logout()">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="dashboard-container">
+    <h2 class="mb-4 text-success">Welcome, {{ user?.name }}</h2>
+    <!-- Appointments Section -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Your Appointments</h5>
+        <button class="btn btn-outline-primary btn-sm doctor-search-btn" (click)="showAppointments()" title="Show all appointments">
+          <i class="fas fa-arrow-right ms-1"></i>
+        </button>
+      </div>
+      <div class="card-body">
+        <div *ngIf="appointments.length > 0; else noAppointments">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+              <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Doctor</th>
+                <th>Reason</th>
+                <th>Fee</th>
+                <th>Notes</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let appointment of appointments">
+                <td>{{ appointment.appointmentDate | date:'mediumDate' }}</td>
+                <td>{{ appointment.startTime }} - {{ appointment.endTime }}</td>
+                <td>{{ appointment.type | titlecase }}</td>
+                <td>
+                    <span [ngClass]="{
+                      'text-warning': appointment.status === 'pending',
+                      'text-success': appointment.status === 'confirmed' || appointment.status === 'completed',
+                      'text-danger': appointment.status === 'cancelled' || appointment.status === 'no_show'
+                    }">
+                      {{ appointment.status | titlecase }}
+                    </span>
+                </td>
+                <td>{{ appointment.doctorName }}</td>
+                <td>{{ appointment.reason }}</td>
+                <td>R{{ appointment.fee }}</td>
+                <td>{{ appointment.notes || '—' }}</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="cancelAppointment(appointment.id)"
+                    [disabled]="appointment.status === 'cancelled' || appointment.status === 'completed' || appointment.status === 'no_show'"
+                  >
+                    Cancel
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ng-template #noAppointments>
+          <p class="text-muted">You have no upcoming appointments.</p>
+        </ng-template>
+      </div>
+    </div>
+    <!-- Doctors Section -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Available Doctors</h5>
+        <button class="btn btn-outline-primary btn-sm doctor-search-btn" (click)="onSearchDoctors()" title="Search or see more doctors">
+          <i class="fas fa-search"></i> <span class="d-none d-md-inline">Search</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <div *ngIf="doctors.length > 0; else noDoctors">
+          <div class="row">
+            <div class="col-md-6 mb-3" *ngFor="let doctor of doctors">
+              <div class="doctor-card">
+                <h5 class="text-success">{{ doctor.name }}</h5>
+                <p><strong>Specialty:</strong> {{ doctor.specialty }}</p>
+                <p><strong>Email:</strong> {{ doctor.email }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noDoctors>
+          <p class="text-muted">No doctors found in the system.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <button class="ai-button" (click)="openAiAssistant()">
+    <i class="fas fa-robot"></i> AI Assistant
+  </button>
+</div>
