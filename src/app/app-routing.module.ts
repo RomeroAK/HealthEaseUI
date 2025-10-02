@@ -39,7 +39,7 @@ const routes: Routes = [
         data: { title: 'Complete Profile' }
       },
       {
-        path: 'appointments',
+        path: 'patient-appointments',
         component: PatientAppointmentComponent,
         data: { title: 'Appointments' }
       },
@@ -64,18 +64,22 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
+  }, {
+  path: 'doctor',
+    canActivate: [AuthGuard],
+    data: {role: 'doctor'},
+    children: [
   {
     path: 'doctor-profile-setup',
     component: DoctorProfileSetupComponent,
-    canActivate: [AuthGuard],
-    data: { role: 'doctor' }
+    data: { title: 'profile setup' }
   },
   {
     path: 'doctor-dashboard',
     component: DoctorDashboardComponent,
-    canActivate: [AuthGuard],
-    data: { role: 'doctor' }
+    data: { title: 'doctor dashboard' }
+  }
+  ]
   },
   { path: '**', redirectTo: '/login' }
 ];

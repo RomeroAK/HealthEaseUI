@@ -11,7 +11,6 @@ import {
   HealthAlert,
   DoctorReview,
   AppointmentSlot,
-  AppointmentBookingRequest,
   AppointmentRescheduleRequest,
   MessageThread,
   Message,
@@ -35,6 +34,7 @@ import {Patient} from '../../model/patient.model';
 import {Appointment, MedicalRecord} from '../../model/doctor.related.interfaces';
 import {DoctorDTO} from '../../model/DoctorDTO';
 import {ApiResponseDto} from '../../model/ApiResponseDto';
+import {AppointmentBookingRequest} from '../../components/components/appointment/patient-appointment/patient-appointment.component';
 
 @Injectable({
   providedIn: 'root'
@@ -220,6 +220,22 @@ export class PatientServiceService {
     }).pipe(
       catchError(this.handleError)
     );
+  }
+
+  getAllDoctors(userId: number | undefined): Observable<ApiResponseDto> {
+    return this.http.get<ApiResponseDto>(`${this.apiUrl}/service/${userId}/patient/doctors/get-all`);
+  }
+
+  getAllAppointments(userId: number | undefined): Observable<ApiResponseDto> {
+    return this.http.get<ApiResponseDto>(`${this.apiUrl}/service/${userId}/patient/appointments/get-all`);
+  }
+
+  getDoctorsBySpecialization(userId: number | undefined, specialization: string): Observable<ApiResponseDto> {
+    return this.http.get<ApiResponseDto>(`${this.apiUrl}/service/${userId}/patient/doctors/get-by-specialization/${specialization}`);
+  }
+
+  getDoctorByLicenseNumber(userId: number | undefined, licenseNumber: string): Observable<ApiResponseDto> {
+    return this.http.get<ApiResponseDto>(`${this.apiUrl}/service/${userId}/patient/doctors/get-by-license/${licenseNumber}`);
   }
 
   getEmergencyContacts(): Observable<EmergencyContact[]> {
@@ -917,31 +933,6 @@ getDoctorById(doctorId: string): Observable<Doctor> {
 );
 }
 
-  getAllDoctors(limit?: number, offset?: number): Observable<Doctor[]> {
-    let params = new HttpParams();
-    if (limit) { params = params.set('limit', limit.toString()); }
-    if (offset) { params = params.set('offset', offset.toString()); }
-
-    return this.http.get<ApiResponseDto>(`${this.apiDoctorUrl}/${this.currentPatientId}/doctors/profiles/get-all`, {
-      headers: this.getHeaders(),
-      params
-    }).pipe(
-      map(response => {
-        if (response.success && Array.isArray(response.data)) {
-          response.data.forEach((doctor: Doctor) => {
-            if (doctor.id) {
-              this.doctorsCache.set(doctor.id, doctor);
-            }
-          });
-          return response.data as Doctor[];
-        } else {
-          throw new Error(response.message || 'Failed to fetch doctors');
-        }
-      }),
-      catchError(this.handleError)
-    );
-  }
-
 getNearbyDoctors(latitude: number, longitude: number, radius: number = 10): Observable<DoctorDTO[]> {
   const params = new HttpParams()
     .set('latitude', latitude.toString())
@@ -1043,14 +1034,12 @@ getDoctorAvailableSlots(doctorId: string, date: string): Observable<AppointmentS
   );
 }
 
-bookAppointment(bookingRequest: AppointmentBookingRequest): Observable<Appointment> {
-  return this.http.post<Appointment>(`${this.apiUrl}/${this.currentPatientId}/patient/appointments/book`, bookingRequest, {
-    headers: this.getHeaders()
-  }).pipe(
-    tap(() => this.clearAppointmentsCache()),
-    catchError(this.handleError)
-  );
-}
+  bookAppointment(userId: number | undefined, appointmentRequest: AppointmentBookingRequest): Observable<ApiResponseDto> {
+    return this.http.post<ApiResponseDto>(
+      `${this.apiUrl}/service/${userId}/patient/appointments/book`,
+      appointmentRequest
+    );
+  }
 
 cancelAppointment(appointmentId: string, reason?: string): Observable<any> {
   const body = reason ? { reason } : {};

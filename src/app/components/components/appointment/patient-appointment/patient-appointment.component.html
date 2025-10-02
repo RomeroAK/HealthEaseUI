@@ -1,63 +1,137 @@
-<div class="appointments-container">
-  <header class="page-header">
-    <h1>My Appointments</h1>
-    <button (click)="bookNewAppointment()" class="btn-new-appointment">
-      + New Appointment
+<div class="appointment-container">
+  <div class="appointment-header">
+    <button class="back-btn" (click)="goBack()">
+      ← Back to Dashboard
     </button>
-  </header>
-
-  <div class="tabs">
-    <button
-      [class.active]="activeTab === 'upcoming'"
-      (click)="switchTab('upcoming')"
-      class="tab-btn"
-    >
-      Upcoming
-    </button>
-    <button
-      [class.active]="activeTab === 'past'"
-      (click)="switchTab('past')"
-      class="tab-btn"
-    >
-      Past
-    </button>
+    <h1>Book Appointment</h1>
   </div>
 
-  <div *ngIf="loading" class="loading">Loading appointments...</div>
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="success-message">
+    <p>{{ successMessage }}</p>
+    <p class="redirect-note">Redirecting to dashboard...</p>
+  </div>
 
-  <div class="appointments-list">
-    <div *ngFor="let appointment of appointments" class="appointment-card">
-      <div class="appointment-header">
-        <div class="appointment-date-badge">
-          <span class="day">{{ appointment.appointmentDate | date:'dd' }}</span>
-          <span class="month">{{ appointment.appointmentDate | date:'MMM' }}</span>
+  <!-- Error Message -->
+  <div *ngIf="error && !loading" class="error-message">
+    {{ error }}
+  </div>
+
+  <div class="appointment-content">
+    <!-- Doctor Information Card -->
+    <div class="doctor-info-card">
+      <h2>Doctor Information</h2>
+      <div class="doctor-details">
+        <div class="doctor-header-section">
+          <div class="doctor-avatar-large">
+            {{ doctor.firstName?.charAt(0) }}{{ doctor.lastName?.charAt(0) }}
+          </div>
+          <div>
+            <h3>Dr. {{ doctor.fullName }}</h3>
+            <p class="specialization">{{ doctor.specialization }}</p>
+          </div>
         </div>
 
-        <div class="appointment-main-info">
-          <h3>{{ appointment.doctorName }}</h3>
-          <p class="time">{{ appointment.startTime }} - {{ appointment.endTime }}</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">License Number:</span>
+            <span class="value">{{ doctor.licenseNumber }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Phone:</span>
+            <span class="value">{{ doctor.phoneNumber }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ doctor.email }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Practice:</span>
+            <span class="value">{{ doctor.practiceName || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Experience:</span>
+            <span class="value">{{ doctor.yearsOfExperience }} years</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Practice Type:</span>
+            <span class="value">{{ doctor.practiceType }}</span>
+          </div>
         </div>
-
-        <span class="status-badge" [style.background-color]="getStatusColor(appointment.status)">
-          {{ appointment.status }}
-        </span>
-      </div>
-
-      <div class="appointment-details">
-        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
-        <p *ngIf="appointment.notes"><strong>Notes:</strong> {{ appointment.notes }}</p>
-      </div>
-
-      <div class="appointment-actions" *ngIf="activeTab === 'upcoming' && appointment.status === 'SCHEDULED'.toLowerCase()">
-        <button (click)="viewDetails(appointment.id)" class="btn-view">View Details</button>
-        <button (click)="rescheduleAppointment(appointment.id)" class="btn-reschedule">Reschedule</button>
-        <button (click)="cancelAppointment(appointment.id)" class="btn-cancel">Cancel</button>
       </div>
     </div>
-  </div>
 
-  <div *ngIf="!loading && appointments.length === 0" class="empty-state">
-    <p>No {{ activeTab }} appointments</p>
-    <button (click)="bookNewAppointment()" class="btn-primary">Book Appointment</button>
+    <!-- Appointment Form -->
+    <div class="appointment-form-card">
+      <h2>Appointment Details</h2>
+
+      <form (ngSubmit)="bookAppointment()" #appointmentForm="ngForm">
+        <!-- Appointment Date -->
+        <div class="form-group">
+          <label for="appointmentDate">Appointment Date *</label>
+          <input
+            type="date"
+            id="appointmentDate"
+            name="appointmentDate"
+            [(ngModel)]="appointmentDate"
+            [min]="getTodayDate()"
+            required
+            class="form-control"
+          />
+        </div>
+
+        <!-- Appointment Type -->
+        <div class="form-group">
+          <label for="appointmentType">Appointment Type *</label>
+          <select
+            id="appointmentType"
+            name="appointmentType"
+            [(ngModel)]="appointmentType"
+            required
+            class="form-control"
+          >
+            <option *ngFor="let type of appointmentTypes" [value]="type">
+              {{ type.replace('_', ' ') }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Reason -->
+        <div class="form-group">
+          <label for="reason">Reason for Visit *</label>
+          <textarea
+            id="reason"
+            name="reason"
+            [(ngModel)]="reason"
+            rows="5"
+            placeholder="Please provide a detailed description of your reason for visiting (minimum 10 characters)..."
+            required
+            minlength="10"
+            class="form-control"
+          ></textarea>
+          <small class="char-count">{{ reason.length }} characters</small>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="goBack()"
+            [disabled]="loading"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn-submit"
+            [disabled]="loading || !appointmentForm.valid"
+          >
+            <span *ngIf="!loading">Book Appointment</span>
+            <span *ngIf="loading">Booking...</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

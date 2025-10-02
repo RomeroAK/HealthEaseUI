@@ -58,12 +58,6 @@ export interface AppointmentSlot {
   available: boolean;
 }
 
-export interface AppointmentBookingRequest {
-  doctorId: string;
-  scheduledDateTime: string;
-  reason: string;
-}
-
 export interface AppointmentRescheduleRequest {
   newDateTime: string;
   reason?: string;

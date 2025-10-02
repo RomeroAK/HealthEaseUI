@@ -464,4 +464,9 @@ export class DoctorProfileSetupComponent implements OnInit {
   addInsuranceProvider(value: string): void {
     this.insuranceProvidersArray.push(new FormControl(value));
   }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

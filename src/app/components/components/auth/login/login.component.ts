@@ -44,10 +44,15 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
         this.loading = false;
-        if (response.success && response.redirectTo) {
-          // Use the redirectTo from backend response
-          console.log('Redirecting to:', response.redirectTo);
-          this.router.navigate([response.redirectTo]);
+        const userRole = response.user?.role.valueOf();
+        if (response.success && response.redirectTo ) {
+          if (userRole && userRole === 'PATIENT'){
+            console.log('Redirecting to:', response.redirectTo);
+            this.router.navigate(['patient', response.redirectTo]);
+          } else if (userRole && userRole === 'DOCTOR') {
+            console.log('Redirecting to:', response.redirectTo);
+            this.router.navigate(['doctor', response.redirectTo]);
+          }
         } else if (response.success) {
           // Fallback redirect if no redirectTo specified
           this.redirectBasedOnUser();
@@ -88,16 +93,16 @@ export class LoginComponent implements OnInit {
     const userType = this.authService.getUserType();
     switch (userType) {
       case 'patient':
-        this.router.navigate(['/patient-dashboard']);
+        this.router.navigate(['patient', '/patient-dashboard']);
         break;
       case 'doctor':
-        this.router.navigate(['/doctor-dashboard']);
+        this.router.navigate(['doctor', '/doctor-dashboard']);
         break;
       case 'admin':
         this.router.navigate(['/admin-dashboard']);
         break;
       default:
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/login']);
     }
   }
 
@@ -112,18 +117,18 @@ export class LoginComponent implements OnInit {
     if (!currentUser.profileCompleted) {
       // Redirect to profile setup
       if (currentUser.role === 'patient') {
-        this.router.navigate(['/patient-profile-setup']);
+        this.router.navigate(['patient', '/patient-profile-setup']);
       } else if (currentUser.role === 'doctor') {
-        this.router.navigate(['/doctor-profile-setup']);
+        this.router.navigate(['doctor', '/doctor-profile-setup']);
       }
     } else {
       // Profile completed, go to dashboard
       if (currentUser.role === 'patient') {
-        this.router.navigate(['/patient-dashboard']);
+        this.router.navigate([ 'patient', '/patient-dashboard']);
       } else if (currentUser.role === 'doctor') {
-        this.router.navigate(['/doctor-dashboard']);
+        this.router.navigate(['doctor', '/doctor-dashboard']);
       } else {
-        this.router.navigate(['/admin-dashboard']);
+        this.router.navigate(['admin', '/admin-dashboard']);
       }
     }
   }
