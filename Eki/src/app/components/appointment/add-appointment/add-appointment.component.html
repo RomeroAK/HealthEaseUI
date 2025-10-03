@@ -17,8 +17,11 @@
     </div>
   </div>
   <div class="mb-3">
-    <label for="reason" class="form-label">Appointment Type</label>
-    <input id="reason" type="text" class="form-control" formControlName="appointmentType">
+    <label for="appointmentType" class="form-label">Appointment Type</label>
+    <select id="appointmentType" class="form-control" formControlName="appointmentType">
+      <option value="" disabled selected>Select type</option>
+      <option *ngFor="let option of appointmentTypeOptions" [value]="option.value">{{ option.text }}</option>
+    </select>
     <div *ngIf="appointmentForm.get('appointmentType')?.touched && appointmentForm.get('appointmentType')?.errors">
       <small class="text-danger" *ngIf="appointmentForm.get('appointmentType')?.errors?.['required']">
         Appointment type is required.

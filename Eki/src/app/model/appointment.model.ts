@@ -6,6 +6,7 @@
   startTime: string; // HH:mm
   endTime: string; // HH:mm
   reason: string;
-  status?: string; // e.g., 'SCHEDULED', 'COMPLETED', etc.
+  appointmentType: string;
+  status?: string;
 }
 

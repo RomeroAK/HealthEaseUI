@@ -26,7 +26,12 @@ export class AddAppointmentComponent implements OnInit {
   @Input() doctor: any | null = null;
   @Input() appointment: AppointmentModel | null = null; // For editing
   @Output() appointmentFinished = new EventEmitter<boolean>();
-
+  appointmentTypeOptions = [
+    { value: 'initial', text: 'Initial' },
+    { value: 'follow_up', text: 'Follow Up' },
+    { value: 'emergency', text: 'Emergency' },
+    { value: 'virtual', text: 'Virtual' }
+  ];
   appointmentForm: FormGroup;
   isEditMode = false;
   todayString: string = new Date().toISOString().split('T')[0];
@@ -39,7 +44,7 @@ export class AddAppointmentComponent implements OnInit {
       appointmentDate: ['', [Validators.required, futureDateValidator]],
       reason: ['', Validators.required],
       appointmentType: ['', Validators.required],
-      status: ['PENDING']
+      status: ['pending']
     });
   }
 
