@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import {AuthService} from '../../../services/authService/auth.service';
-import {PatientServiceService} from '../../../services/patientProfileService/patient-service.service';
+import {PatientService} from '../../../services/patientProfileService/patient.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -20,7 +20,7 @@ export class NavigationHeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private patientService: PatientServiceService,
+    private patientService: PatientService,
     private router: Router
   ) {}
 

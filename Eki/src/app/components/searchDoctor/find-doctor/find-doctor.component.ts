@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {DoctorService} from '../../../services/doctorProfileService/doctor.service';
 import {FormsModule} from '@angular/forms';
+import {PatientService} from '../../../services/patientProfileService/patient.service';
 
 @Component({
   selector: 'app-find-doctor',
@@ -30,10 +31,13 @@ export class FindDoctorComponent implements OnInit {
   doctors: any[] = [];
   loading = false;
 
-  constructor(private doctorService: DoctorService, private router: Router) {}
+  constructor(private doctorService: DoctorService, private router: Router,
+              private patientService: PatientService) {}
 
   ngOnInit(): void {
-    this.searchDoctors();
+    this.patientService.getAllDoctors().subscribe(data => {
+      this.doctors = data
+    });
   }
 
   searchDoctors(): void {

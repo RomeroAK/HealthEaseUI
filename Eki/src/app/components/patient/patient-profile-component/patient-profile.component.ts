@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {PatientServiceService} from '../../../services/patientProfileService/patient-service.service';
+import {PatientService} from '../../../services/patientProfileService/patient.service';
 import {AuthService} from '../../../services/authService/auth.service';
 import {Router} from '@angular/router';
 
@@ -26,7 +26,7 @@ export class PatientProfileComponent implements OnInit {
   ];
 
   constructor(
-    private patientService: PatientServiceService,
+    private patientService: PatientService,
     private authService: AuthService,
     private router: Router
   ) {}

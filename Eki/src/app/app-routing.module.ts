@@ -15,6 +15,7 @@ import {PatientAppointmentComponent} from './components/appointment/patient-appo
 import {PrescriptionsComponent} from './components/prescription/prscriptions/prescriptions.component';
 import {AiAgentComponent} from './components/ai-agent/ai-agent.component';
 import {FindDoctorComponent} from './components/searchDoctor/find-doctor/find-doctor.component';
+import {DoctorProfileComponent} from './components/doctor/doctor-profile/doctor-profile.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -85,6 +86,11 @@ const routes: Routes = [
         path: 'doctor-dashboard',
         component: DoctorDashboardComponent,
         data: { title: 'Dashboard' }
+      },
+      {
+        path: ':id/profile',
+        component: DoctorProfileComponent,
+        data: { title: 'Profile' }
       },
       {
         path: '',

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '../../../services/authService/auth.service';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -27,18 +27,41 @@ export class DoctorProfileSetupComponent implements OnInit {
 
   // Static data
   specializations: DoctorSpecialization[] = [
-    { id: '1', name: 'General Practice', category: 'Primary Care' },
-    { id: '2', name: 'Cardiology', category: 'Specialist' },
-    { id: '3', name: 'Dermatology', category: 'Specialist' },
-    { id: '4', name: 'Neurology', category: 'Specialist' },
-    { id: '5', name: 'Pediatrics', category: 'Specialist' },
-    { id: '6', name: 'Orthopedics', category: 'Specialist' },
-    { id: '7', name: 'Gynecology', category: 'Specialist' },
-    { id: '8', name: 'Psychiatry', category: 'Mental Health' },
-    { id: '9', name: 'Radiology', category: 'Diagnostic' },
-    { id: '10', name: 'Emergency Medicine', category: 'Emergency' }
+    {id: '1', name: 'General Practice', category: 'Primary Care'},
+    {id: '2', name: 'Cardiology', category: 'Specialist'},
+    {id: '3', name: 'Dermatology', category: 'Specialist'},
+    {id: '4', name: 'Neurology', category: 'Specialist'},
+    {id: '5', name: 'Pediatrics', category: 'Specialist'},
+    {id: '6', name: 'Orthopedics', category: 'Specialist'},
+    {id: '7', name: 'Gynecology', category: 'Specialist'},
+    {id: '8', name: 'Psychiatry', category: 'Mental Health'},
+    {id: '9', name: 'Radiology', category: 'Diagnostic'},
+    {id: '10', name: 'Emergency Medicine', category: 'Emergency'}
   ];
-
+  medicalAidProviders = [
+    'Discovery Health Medical Scheme',
+    'Bonitas Medical Fund',
+    'Momentum Health',
+    'Fedhealth Medical Scheme',
+    'Medihelp Medical Scheme',
+    'Bestmed Medical Scheme',
+    'Medshield Medical Scheme',
+    'Genesis Medical Scheme',
+    'Sizwe Hosmed Medical Scheme',
+    'Keyhealth',
+    'GEMS (Government Employees Medical Scheme)',
+    'Bankmed',
+    'Polmed',
+    'CAMAF (Chartered Accountants Medical Aid Fund)',
+    'Profmed',
+    'OnePlan Health Insurance',
+    'Sanlam Health Insurance',
+    'Dis-Chem Health Insurance',
+    'Essential Med',
+    'GetSavvi Health',
+    'Discovery Gap Cover',
+    'Stratum Benefits (Gap Cover)'
+  ];
   languages = [
     'English', 'Afrikaans', 'Zulu', 'Xhosa', 'Sotho',
     'Tswana', 'Pedi', 'Venda', 'Tsonga', 'Ndebele', 'Swati'
@@ -50,10 +73,12 @@ export class DoctorProfileSetupComponent implements OnInit {
   ];
 
   consultationTypes = [
-    { value: 'in_person', label: 'In-Person' },
-    { value: 'virtual', label: 'Virtual/Online' },
-    { value: 'both', label: 'Both In-Person & Virtual' }
+    {value: 'in_person', label: 'In-Person'},
+    {value: 'virtual', label: 'Virtual/Online'},
+    {value: 'both', label: 'Both In-Person & Virtual'}
   ];
+
+  selectedAcceptedInsurance: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -71,38 +96,38 @@ export class DoctorProfileSetupComponent implements OnInit {
   initializeForm(): FormGroup {
     return this.fb.group({
       // step 1: Basic Information
-    doctorInfo: this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      fullName: ['', Validators.required],
-      email: ['', [Validators.email]],
-      telephone: ['', Validators.required],
-      gender: ['', Validators.required],
-      specialization: ['', Validators.required],
-      licenseNumber: ['', Validators.required],
-      consultationFee: [null],
-      acceptedInsurance: [[]],
-      isPrivatePractice: [false],
-      practiceName: [''],
-      hospitalName: ['', Validators.required],
-      isActive: [true],
-      clinicAddress: this.fb.group({
-        street: [''],
-        city: [''],
-        province: [''],
-        postalCode: [''],
-        country: ['']
+      doctorInfo: this.fb.group({
+        firstName: ['', Validators.required],
+        lastName: ['', Validators.required],
+        fullName: ['', Validators.required],
+        email: ['', [Validators.email]],
+        telephone: ['', Validators.required],
+        gender: ['', Validators.required],
+        specialization: ['', Validators.required],
+        licenseNumber: ['', Validators.required],
+        consultationFee: [null],
+        acceptedInsurance: [[]],
+        isPrivatePractice: [false],
+        practiceName: [''],
+        hospitalName: ['', Validators.required],
+        isActive: [true],
+        clinicAddress: this.fb.group({
+          street: [''],
+          city: [''],
+          province: [''],
+          postalCode: [''],
+          country: ['']
+        }),
+        hospitalAddress: this.fb.group({
+          street: [''],
+          city: [''],
+          province: [''],
+          postalCode: [''],
+          country: ['']
+        }),
+        bio: ['']
       }),
-      hospitalAddress: this.fb.group({
-        street: [''],
-        city: [''],
-        province: [''],
-        postalCode: [''],
-        country: ['']
-      }),
-      bio: ['']
-    }),
-  });
+    });
   }
 
   // Form Array Getters
@@ -318,6 +343,24 @@ export class DoctorProfileSetupComponent implements OnInit {
     return !hasErrors;
   }
 
+  // Tagbox logic for acceptedInsurance
+  addAcceptedInsurance(selectBox: any): void {
+    const provider = (selectBox as HTMLSelectElement).value;
+    if (provider && !this.selectedAcceptedInsurance.includes(provider)) {
+      this.selectedAcceptedInsurance.push(provider);
+      this.updateAcceptedInsuranceFormValue();
+    }
+  }
+
+  removeAcceptedInsurance(provider: string): void {
+    this.selectedAcceptedInsurance = this.selectedAcceptedInsurance.filter(p => p !== provider);
+    this.updateAcceptedInsuranceFormValue();
+  }
+
+  updateAcceptedInsuranceFormValue(): void {
+    this.profileForm.get('acceptedInsurance')?.patchValue([...this.selectedAcceptedInsurance]);
+  }
+
   // Utility Methods
   isFieldInvalid(fieldName: string): boolean {
     const field = this.profileForm.get(fieldName);
@@ -327,11 +370,21 @@ export class DoctorProfileSetupComponent implements OnInit {
   getFieldError(fieldName: string): string {
     const field = this.profileForm.get(fieldName);
     if (field && field.errors && field.touched) {
-      if (field.errors["required"]) { return `${fieldName} is required`; }
-      if (field.errors["email"]) { return 'Invalid email format'; }
-      if (field.errors["pattern"]) { return `Invalid ${fieldName} format`; }
-      if (field.errors["minLength"]) { return `${fieldName} is too short`; }
-      if (field.errors["min"]) { return `${fieldName} must be greater than 0`; }
+      if (field.errors["required"]) {
+        return `${fieldName} is required`;
+      }
+      if (field.errors["email"]) {
+        return 'Invalid email format';
+      }
+      if (field.errors["pattern"]) {
+        return `Invalid ${fieldName} format`;
+      }
+      if (field.errors["minLength"]) {
+        return `${fieldName} is too short`;
+      }
+      if (field.errors["min"]) {
+        return `${fieldName} must be greater than 0`;
+      }
     }
     return '';
   }
@@ -374,6 +427,15 @@ export class DoctorProfileSetupComponent implements OnInit {
       acceptsInsurance: doctor.acceptedInsurance
     });
 
+    // Sync tagbox UI with loaded data
+    if (Array.isArray(doctor.acceptedInsurance)) {
+      this.selectedAcceptedInsurance = [...doctor.acceptedInsurance];
+      this.updateAcceptedInsuranceFormValue();
+    } else {
+      this.selectedAcceptedInsurance = [];
+      this.updateAcceptedInsuranceFormValue();
+    }
+
     // Populate address
     if (doctor.clinicAddress) {
       this.profileForm.get('address')?.patchValue(doctor.clinicAddress);
@@ -396,14 +458,14 @@ export class DoctorProfileSetupComponent implements OnInit {
 
       // Send JSON directly
       const jsonPayload = this.profileForm.value;
-
+      jsonPayload.doctorInfo.acceptedInsurance = this.selectedAcceptedInsurance.join(',');
       this.doctorService.updateProfile(jsonPayload)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
             this.isSubmitting = false;
             alert('Profile updated successfully!');
-            this.router.navigate(['/doctor-dashboard']);
+            this.router.navigate(['/doctor/doctor-dashboard']);
           },
           error: (error) => {
             this.isSubmitting = false;

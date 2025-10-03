@@ -47,7 +47,10 @@
           <legend>Professional Details</legend>
 
           <label>Specialization</label>
-          <input formControlName="specialization" type="text" />
+          <select formControlName="specialization">
+            <option value="">Select</option>
+            <option *ngFor="let s of specializations" [value]="s.name">{{ s.name }}</option>
+          </select>
 
           <label>License Number</label>
           <input formControlName="licenseNumber" type="text" />
@@ -56,7 +59,20 @@
           <input formControlName="consultationFee" type="number" />
 
           <label>Accepted Insurance</label>
-          <input formControlName="acceptedInsurance" type="text" placeholder="Comma-separated list" />
+          <div class="tagbox-container">
+            <div class="selected-tags">
+              <span class="tag" *ngFor="let provider of selectedAcceptedInsurance">
+                {{ provider }}
+                <button type="button" class="remove-tag" (click)="removeAcceptedInsurance(provider)">&times;</button>
+              </span>
+            </div>
+            <select class="form-control" [ngModel]="''" (change)="addAcceptedInsurance($event.target )">
+              <option value="">Select medical aid provider</option>
+              <option *ngFor="let provider of medicalAidProviders" [value]="provider" [disabled]="selectedAcceptedInsurance.includes(provider)">
+                {{ provider }}
+              </option>
+            </select>
+          </div>
 
           <label>Private Practice</label>
           <input type="checkbox" formControlName="isPrivatePractice" />

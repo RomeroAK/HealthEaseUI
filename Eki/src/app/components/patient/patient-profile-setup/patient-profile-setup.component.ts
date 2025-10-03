@@ -3,7 +3,7 @@ import {AuthService} from '../../../services/authService/auth.service';
 import {Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Patient} from '../../../model/patient.model';
-import {PatientServiceService} from '../../../services/patientProfileService/patient-service.service';
+import {PatientService} from '../../../services/patientProfileService/patient.service';
 
 
 @Component({
@@ -40,7 +40,7 @@ export class PatientProfileSetupComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private patientService: PatientServiceService,
+    private patientService: PatientService,
     private authService: AuthService,
     private router: Router
   ) {

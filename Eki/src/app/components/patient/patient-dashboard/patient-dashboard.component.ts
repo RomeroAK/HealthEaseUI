@@ -8,7 +8,7 @@ import {forkJoin, Subject} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DoctorService} from '../../../services/doctorProfileService/doctor.service';
 import {Patient} from '../../../model/patient.model';
-import {PatientServiceService} from '../../../services/patientProfileService/patient-service.service';
+import {PatientService} from '../../../services/patientProfileService/patient.service';
 
 @Component({
   selector: 'app-patient-dashboard',
@@ -21,7 +21,7 @@ export class PatientDashboardComponent implements OnInit {
   doctors: any[] = [];
   user: any;
 
-  constructor(private router: Router, private patientService: PatientServiceService, private authService: AuthService) {
+  constructor(private router: Router, private patientService: PatientService, private authService: AuthService) {
     const nav = this.router.getCurrentNavigation();
     this.user = this.authService.currentUserValue;
   }
@@ -58,5 +58,10 @@ export class PatientDashboardComponent implements OnInit {
 
   onSearchDoctors(): void {
     this.router.navigate(['/patient/find-doctor']);
+  }
+
+  bookAppointment(doctor: any): void {
+    // TODO: Implement booking logic or navigation
+    alert('Booking appointment with Dr. ' + (doctor.fullName || doctor.firstName + ' ' + doctor.lastName));
   }
 }

@@ -39,7 +39,7 @@ import {ApiResponseDto} from '../../model/ApiResponseDto';
 @Injectable({
   providedIn: 'root'
 })
-export class PatientServiceService {
+export class PatientService {
 
   private apiUrl = 'http://localhost:5001/api/patients';
   private apiDoctorUrl = 'http://localhost:5001/api/doctors';

@@ -69,6 +69,16 @@ export class DoctorService {
       catchError(this.handleError)
     );
   }
+
+  getDoctorProfile(doctorId: number): Observable<Doctor> {
+    return this.http.get<ApiResponseDto>(`${this.apiUrl}/${doctorId}/doctor/profiles/get-by-id`, {
+      headers: this.getHeaders()
+    }).pipe(
+      map(response => response.data as Doctor), // 👈 Extract and cast the doctor object
+      catchError(this.handleError)
+    );
+  }
+
   updateProfile(profileData: any): Observable<Doctor> {
     return this.http.put<ApiResponseDto>( `${this.apiUrl}/${this.currentDoctorId}/doctor/profiles/update` , profileData,  {
       headers: this.getHeaders()

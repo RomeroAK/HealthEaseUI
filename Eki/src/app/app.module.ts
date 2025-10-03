@@ -33,6 +33,7 @@ import {
 } from './components/appointment/patient-appointment/patient-appointment.component';
 import {AiAgentComponent} from './components/ai-agent/ai-agent.component';
 import {FindDoctorComponent} from './components/searchDoctor/find-doctor/find-doctor.component';
+import {DoctorProfileComponent} from './components/doctor/doctor-profile/doctor-profile.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import {FindDoctorComponent} from './components/searchDoctor/find-doctor/find-do
     PrescriptionsComponent,
     PatientAppointmentComponent,
     AiAgentComponent,
-    FindDoctorComponent
+    FindDoctorComponent,
+    DoctorProfileComponent
   ],
   imports: [
     BrowserModule,

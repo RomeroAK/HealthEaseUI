@@ -98,3 +98,4 @@ export class RegisterComponent implements OnInit {
     return !!this.registerForm.get(controlName)?.hasError(errorCode);
   }
 }
+
