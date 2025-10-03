@@ -1,7 +1,28 @@
 
 /* You can add global styles to this file, and also import other style files */
 /* Global Styles */
+.navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 0.75rem 2rem;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  border-radius: 0;
+}
 
+.navbar-brand {
+  color: #fff !important;
+  font-weight: bold;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+}
+
+.navbar .btn {
+  font-weight: 500;
+  border-radius: 25px;
+  margin-left: 8px;
+}
 * {
   box-sizing: border-box;
   margin: 0;
@@ -115,3 +136,6 @@ body {
 @keyframes spinner-border {
   to { transform: rotate(360deg); }
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

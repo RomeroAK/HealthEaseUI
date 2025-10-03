@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {AuthService} from '../../../services/authService/auth.service';
 import {Appointment, Doctor, DoctorSearchCriteria, MedicalRecord} from '../../../model/doctor.related.interfaces';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
@@ -9,6 +9,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DoctorService} from '../../../services/doctorProfileService/doctor.service';
 import {Patient} from '../../../model/patient.model';
 import {PatientService} from '../../../services/patientProfileService/patient.service';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-patient-dashboard',
@@ -21,7 +22,13 @@ export class PatientDashboardComponent implements OnInit {
   doctors: any[] = [];
   user: any;
 
-  constructor(private router: Router, private patientService: PatientService, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private patientService: PatientService,
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private viewportScroller: ViewportScroller
+  ) {
     const nav = this.router.getCurrentNavigation();
     this.user = this.authService.currentUserValue;
   }
@@ -31,6 +38,12 @@ export class PatientDashboardComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
+
+    this.route.fragment.subscribe(fragment => {
+      if (fragment) {
+        setTimeout(() => this.viewportScroller.scrollToAnchor(fragment), 0);
+      }
+    });
 
     this.patientService.getAppointments(this.user.id).subscribe(data => this.appointments = data);
     this.patientService.getAllDoctors().subscribe(data => this.doctors = data);

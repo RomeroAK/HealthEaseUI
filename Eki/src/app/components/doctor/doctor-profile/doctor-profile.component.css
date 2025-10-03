@@ -1,0 +1,60 @@
+.doctor-profile-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+}
+.doctor-profile-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+  max-width: 700px;
+  width: 100%;
+  margin: 40px auto 0 auto;
+  padding: 32px 24px 24px 24px;
+}
+h2 {
+  color: #43a047;
+  margin-bottom: 24px;
+}
+fieldset {
+  border: 1px solid #e1bee7;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  padding: 16px 20px 10px 20px;
+}
+legend {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0 8px;
+}
+.profile-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.profile-row label {
+  min-width: 180px;
+  font-weight: 500;
+  color: #333;
+}
+.profile-row span {
+  color: #222;
+}
+.loading {
+  color: #764ba2;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.error {
+  color: #e53935;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+

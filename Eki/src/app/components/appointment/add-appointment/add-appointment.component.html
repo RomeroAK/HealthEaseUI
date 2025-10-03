@@ -1,0 +1,43 @@
+<form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="doctorId" class="form-label">Doctor</label>
+    <div class="form-control-plaintext">Dr. {{ doctor.fullName || doctor.name }}</div>
+  </div>
+  <div class="mb-3">
+    <label for="appointmentDate" class="form-label">Date</label>
+    <input id="appointmentDate" type="date" class="form-control" formControlName="appointmentDate"
+           [min]="todayString" />
+    <div *ngIf="appointmentForm.get('appointmentDate')?.touched && appointmentForm.get('appointmentDate')?.errors">
+      <small class="text-danger" *ngIf="appointmentForm.get('appointmentDate')?.errors?.['required']">
+        Date is required.
+      </small>
+      <small class="text-danger" *ngIf="appointmentForm.get('appointmentDate')?.errors?.['pastDate']">
+        Please select today or a future date.
+      </small>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="reason" class="form-label">Appointment Type</label>
+    <input id="reason" type="text" class="form-control" formControlName="appointmentType">
+    <div *ngIf="appointmentForm.get('appointmentType')?.touched && appointmentForm.get('appointmentType')?.errors">
+      <small class="text-danger" *ngIf="appointmentForm.get('appointmentType')?.errors?.['required']">
+        Appointment type is required.
+      </small>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="notes" class="form-label">Reason</label>
+    <textarea id="notes" class="form-control" formControlName="reason"></textarea>
+    <div *ngIf="appointmentForm.get('reason')?.touched && appointmentForm.get('reason')?.errors">
+      <small class="text-danger" *ngIf="appointmentForm.get('reason')?.errors?.['required']">
+        Reason is required.
+      </small>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-secondary" (click)="finishAndClose()">Cancel</button>
+    <button type="submit" class="btn btn-primary" [disabled]="appointmentForm.invalid">
+      {{ isEditMode ? 'Update' : 'Book' }} Appointment
+    </button>
+  </div>
+</form>

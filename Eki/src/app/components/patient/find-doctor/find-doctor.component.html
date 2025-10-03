@@ -25,7 +25,7 @@
       />
 
       <button (click)="searchDoctors()" class="btn-primary">Search</button>
-      <button (click)="findNearbyDoctors()" class="btn-secondary">Near Me</button>
+<!--      <button (click)="findNearbyDoctors()" class="btn-secondary">Near Me</button>-->
       <button (click)="clearFilters()" class="btn-link">Clear</button>
     </div>
   </div>
@@ -43,7 +43,7 @@
         </div>
         <div class="card-actions">
           <button (click)="viewDoctorProfile(doctor.id)" class="btn-view">View Profile</button>
-          <button (click)="bookAppointment(doctor.id)" class="btn-book">Book Appointment</button>
+          <button (click)="openAddAppointmentModal(doctor)" class="btn-book">Book Appointment</button>
         </div>
       </div>
     </div>
@@ -51,5 +51,26 @@
 
   <div *ngIf="!loading && doctors.length === 0" class="empty-state">
     <p>No doctors found. Try adjusting your search criteria.</p>
+  </div>
+</div>
+
+<!-- Add Appointment Modal -->
+<div class="modal fade show" tabindex="-1"
+     [ngStyle]="{'display': showAddAppointmentModal ? 'block' : 'none', 'background': 'rgba(0,0,0,0.5)'}"
+     *ngIf="showAddAppointmentModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Book Appointment</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeAddAppointmentModal()"></button>
+      </div>
+      <div class="modal-body">
+        <app-add-appointment
+          [doctorId]="selectedDoctorId"
+          [doctor]="selectedDoctor"
+          (appointmentFinished)="closeAddAppointmentModal($event)">
+        </app-add-appointment>
+      </div>
+    </div>
   </div>
 </div>

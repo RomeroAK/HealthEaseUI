@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {Appointment} from '../../../model/doctor.related.interfaces';
 import {AppointmentService} from '../../../services/appointmentService/appointment.service';
 import {AuthService} from '../../../services/authService/auth.service';
+import { AddAppointmentComponent } from '../add-appointment/add-appointment.component';
 
 @Component({
   selector: 'app-patient-appointment',
@@ -15,6 +16,8 @@ export class PatientAppointmentComponent implements OnInit {
   appointments: Appointment[] = [];
   activeTab: 'upcoming' | 'past' = 'upcoming';
   loading = false;
+  showAddAppointmentModal = false;
+  selectedDoctorId: number | null = null;
 
   constructor(
     private appointmentService: AppointmentService,
@@ -75,8 +78,21 @@ export class PatientAppointmentComponent implements OnInit {
     this.router.navigate(['/appointments', appointmentId]);
   }
 
+  openAddAppointmentModal(doctorId?: number): void {
+    this.selectedDoctorId = doctorId || null;
+    this.showAddAppointmentModal = true;
+  }
+
+  closeAddAppointmentModal(refresh: boolean = false): void {
+    this.showAddAppointmentModal = false;
+    this.selectedDoctorId = null;
+    if (refresh) {
+      this.loadAppointments();
+    }
+  }
+
   bookNewAppointment(): void {
-    this.router.navigate(['patient/find-doctor']);
+    this.openAddAppointmentModal();
   }
 
   getStatusColor(status: string): string {

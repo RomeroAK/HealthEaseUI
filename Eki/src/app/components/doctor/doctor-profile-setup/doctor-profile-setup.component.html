@@ -66,7 +66,7 @@
                 <button type="button" class="remove-tag" (click)="removeAcceptedInsurance(provider)">&times;</button>
               </span>
             </div>
-            <select class="form-control" [ngModel]="''" (change)="addAcceptedInsurance($event.target )">
+            <select class="form-control" (change)="addAcceptedInsurance($event.target )">
               <option value="">Select medical aid provider</option>
               <option *ngFor="let provider of medicalAidProviders" [value]="provider" [disabled]="selectedAcceptedInsurance.includes(provider)">
                 {{ provider }}
@@ -93,7 +93,10 @@
             <label>City</label>
             <input formControlName="city" type="text" />
             <label>Province</label>
-            <input formControlName="province" type="text" />
+            <select formControlName="province">
+              <option value="">Select province</option>
+              <option *ngFor="let province of provinces" [value]="province">{{ province }}</option>
+            </select>
             <label>Postal Code</label>
             <input formControlName="postalCode" type="text" />
           </div>
@@ -107,7 +110,10 @@
             <label>City</label>
             <input formControlName="city" type="text" />
             <label>Province</label>
-            <input formControlName="province" type="text" />
+            <select formControlName="province">
+              <option value="">Select province</option>
+              <option *ngFor="let province of provinces" [value]="province">{{ province }}</option>
+            </select>
             <label>Postal Code</label>
             <input formControlName="postalCode" type="text" />
           </div>

@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import {DoctorService} from '../../../services/doctorProfileService/doctor.service';
 import {FormsModule} from '@angular/forms';
 import {PatientService} from '../../../services/patientProfileService/patient.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddAppointmentComponent } from '../../appointment/add-appointment/add-appointment.component';
 
 @Component({
   selector: 'app-find-doctor',
@@ -30,9 +32,13 @@ export class FindDoctorComponent implements OnInit {
   ];
   doctors: any[] = [];
   loading = false;
+  showAddAppointmentModal = false;
+  selectedDoctorId: number | null = null;
+  selectedDoctor: any = null;
 
   constructor(private doctorService: DoctorService, private router: Router,
-              private patientService: PatientService) {}
+              private patientService: PatientService,
+              private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.patientService.getAllDoctors().subscribe(data => {
@@ -72,15 +78,32 @@ export class FindDoctorComponent implements OnInit {
 
   clearFilters(): void {
     this.searchFilters = { name: '', specialty: '', practiceName: '' };
-    this.searchDoctors();
+    // this.searchDoctors();
   }
 
   viewDoctorProfile(id: string): void {
-    this.router.navigate(['/doctor/profile', id]);
+    this.router.navigate([`/patient/find-doctor/${id}/profile`]);
+  }
+
+  openAddAppointmentModal(doctor: any): void {
+    this.selectedDoctorId = doctor.id;
+    this.selectedDoctor = doctor;
+    this.showAddAppointmentModal = true;
+  }
+
+  closeAddAppointmentModal(refresh: boolean = false): void {
+    this.showAddAppointmentModal = false;
+    this.selectedDoctorId = null;
+    this.selectedDoctor = null;
+    if (refresh) {
+      this.router.navigate(['/patient/patient-dashboard']);
+    }
   }
 
   bookAppointment(id: string): void {
-    this.router.navigate(['/appointment/book', id]);
+    const doctor = this.doctors.find((d: any) => d.id === id);
+    if (doctor) {
+      this.openAddAppointmentModal(doctor);
+    }
   }
 }
-

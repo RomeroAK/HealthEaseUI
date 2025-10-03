@@ -430,7 +430,7 @@ export class PatientProfileSetupComponent implements OnInit {
         await this.patientService.updateProfile(profileData).toPromise();
 
         // Navigate to dashboard
-        this.router.navigate(['/patient-dashboard']);
+        this.router.navigate(['/patient/patient-dashboard']);
       } catch (error) {
         console.error('Error updating profile:', error);
         alert('Error updating profile. Please try again.');

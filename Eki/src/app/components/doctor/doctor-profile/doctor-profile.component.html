@@ -1,1 +1,33 @@
-<p>doctor-profile works!</p>
+<div class="doctor-profile-bg">
+  <div class="doctor-profile-container">
+    <h2>Doctor Profile</h2>
+    <div *ngIf="isLoading" class="loading">Loading profile...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+    <div *ngIf="doctor">
+      <fieldset>
+        <legend>Personal Information</legend>
+        <div class="profile-row"><label>First Name:</label> <span>{{ doctor.firstName }}</span></div>
+        <div class="profile-row"><label>Last Name:</label> <span>{{ doctor.lastName }}</span></div>
+        <div class="profile-row"><label>Full Name:</label> <span>{{ doctor.fullName }}</span></div>
+        <div class="profile-row"><label>Email:</label> <span>{{ doctor.email }}</span></div>
+        <div class="profile-row"><label>Telephone:</label> <span>{{ doctor.telephone }}</span></div>
+        <div class="profile-row"><label>Gender:</label> <span>{{ doctor.gender }}</span></div>
+      </fieldset>
+      <fieldset>
+        <legend>Professional Details</legend>
+        <div class="profile-row"><label>Specialization:</label> <span>{{ doctor.specialization }}</span></div>
+        <div class="profile-row"><label>Practice Number:</label> <span>{{ doctor.licenseNumber }}</span></div>
+        <div class="profile-row"><label>Consultation Fee:</label> <span>R {{ doctor.consultationFee }}</span></div>
+        <div class="profile-row"><label>Accepted Medical Aids:</label> <span>{{ doctor.acceptedInsurance?.join(', ') }}</span></div>
+      </fieldset>
+      <fieldset *ngIf="doctor.hospitalAddress">
+        <legend>Practice Address</legend>
+        <div class="profile-row"><label>Street:</label> <span>{{ doctor.hospitalAddress.street }}</span></div>
+        <div class="profile-row"><label>City:</label> <span>{{ doctor.hospitalAddress.city}}</span></div>
+        <div class="profile-row"><label>Province:</label> <span>{{ doctor.hospitalAddress.province }}</span></div>
+        <div class="profile-row"><label>Postal Code:</label> <span>{{ doctor.hospitalAddress.postalCode }}</span></div>
+      </fieldset>
+    </div>
+  </div>
+</div>
+
