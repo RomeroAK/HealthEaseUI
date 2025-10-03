@@ -23,10 +23,19 @@ export class PatientDashboardComponent implements OnInit {
   error: string | null = null;
   private userId = this.authService.currentUserIdValue;
   // Search properties
-  searchType: 'all' | 'specialization' | 'license' = 'all';
+  searchType: 'all' | 'specialization' | 'license'  | 'consultationFee' = 'all';
   searchQuery = '';
   isSearching = false;
   searchError: string | null = null;
+
+  // Chatbot properties
+  isChatbotOpen = false;
+  chatMessages: ChatMessage[] = [];
+  userMessage = '';
+  isChatbotLoading = false;
+
+  // User properties
+  username  = this.authService.currentUserValue?.email;
 
   constructor(private router: Router, private patientService: PatientServiceService, private authService: AuthService) {
   }
@@ -88,6 +97,8 @@ export class PatientDashboardComponent implements OnInit {
       this.searchBySpecialization();
     } else if (this.searchType === 'license') {
       this.searchByLicenseNumber();
+    } else if (this.searchType === 'consultationFee') {
+      this.searchByConsultationFee();
     }
   }
   loadAllDoctors(): void {
@@ -151,6 +162,25 @@ export class PatientDashboardComponent implements OnInit {
       });
   }
 
+  searchByConsultationFee(): void {
+    this.patientService.getDoctorsByConsultationFee(this.userId, this.searchQuery.trim())
+      .toPromise()
+      .then(response => {
+        if (response?.success && response.data){
+          this.doctors = [response.data as DoctorProfileResponseDto];
+        } else {
+          this.searchError = response?.message || 'Doctor not found';
+          this.doctors = [];
+        }
+        this.isSearching = false;
+      })
+      .catch(err => {
+        this.searchError = 'Failed to find doctor. Please try again.';
+        this.isSearching = false;
+        console.error('Error searching doctor:', err);
+      });
+  }
+
   getAppointmentStatusClass(status: string): string {
     const statusMap: { [key: string]: string } = {
       SCHEDULED: 'status-scheduled',
@@ -175,17 +205,112 @@ export class PatientDashboardComponent implements OnInit {
       state: { doctor, userId: this.userId }
     });
   }
-
-  openAiAssistant(): void {
-    alert('Launching AI Assistant...'); // Replace with actual logic or modal
+// Chatbot Methods
+  initializeChatbot(): void {
+    // Add welcome message
+    this.chatMessages.push({
+      text: 'Hello! I\'m your AI health assistant. How can I help you today?',
+      sender: 'bot',
+      timestamp: new Date()
+    });
   }
 
+  toggleChatbot(): void {
+    this.isChatbotOpen = !this.isChatbotOpen;
+  }
+
+  closeChatbot(): void {
+    this.isChatbotOpen = false;
+  }
+
+  sendMessage(): void {
+    if (!this.userMessage.trim()) {
+      return;
+    }
+
+    // Add user message to chat
+    this.chatMessages.push({
+      text: this.userMessage,
+      sender: 'user',
+      timestamp: new Date()
+    });
+
+    const userQuery = this.userMessage;
+    this.userMessage = '';
+    this.isChatbotLoading = true;
+
+    // TODO: Replace this with your actual AI chatbot API call
+    // For now, using a mock response
+    setTimeout(() => {
+      this.getBotResponse(userQuery);
+    }, 1000);
+  }
+
+  getBotResponse(query: string): void {
+    // TODO: Implement actual API call to your AI chatbot backend
+    // This is a mock implementation
+    let response = '';
+
+    const lowerQuery = query.toLowerCase();
+
+    if (lowerQuery.includes('appointment') || lowerQuery.includes('book')) {
+      response = 'I can help you book an appointment! You can click on the \'Book Appointment\' button next to any doctor in your dashboard to schedule a visit.';
+    } else if (lowerQuery.includes('doctor') || lowerQuery.includes('specialist')) {
+      response = 'You can search for doctors by specialization or license number using the search bar on your dashboard. What type of specialist are you looking for?';
+    } else if (lowerQuery.includes('symptom') || lowerQuery.includes('sick') || lowerQuery.includes('pain')) {
+      response = 'I understand you\'re experiencing symptoms. While I can provide general information, it\'s important to consult with a healthcare professional for proper diagnosis. Would you like to book an appointment with a doctor?';
+    } else if (lowerQuery.includes('prescription') || lowerQuery.includes('medication')) {
+      response = 'For prescription and medication information, please consult with your doctor during an appointment. They can provide personalized medical advice based on your health history.';
+    } else {
+      response = 'I\'m here to help! You can ask me about booking appointments, finding doctors, or general health questions. What would you like to know?';
+    }
+
+    this.chatMessages.push({
+      text: response,
+      sender: 'bot',
+      timestamp: new Date()
+    });
+
+    this.isChatbotLoading = false;
+
+    // Scroll to bottom of chat
+    setTimeout(() => {
+      this.scrollChatToBottom();
+    }, 100);
+  }
+
+  scrollChatToBottom(): void {
+    const chatBody = document.querySelector('.chatbot-body');
+    if (chatBody) {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+  }
+
+  // Navigation methods
+  goBack(): void {
+    window.history.back();
+  }
+
+  formatMessageTime(date: Date): string {
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
 
   cancelAppointment(id: number): void {
   }
 
   viewProfile(): void {
     this.router.navigate(['/patient-view-profile']);
+  }
+
+  getInitials(name: string): string {
+    const names = name.split(' ');
+    if (names.length >= 2) {
+      return names[0].charAt(0) + names[1].charAt(0);
+    }
+    return name.charAt(0);
   }
 
   logout(): void {
@@ -255,5 +380,11 @@ export interface DoctorSummaryDto {
   id: number;
   fullName: string;
   specialization: string;
+}
+
+export interface ChatMessage {
+  text: string;
+  sender: 'user' | 'bot';
+  timestamp: Date;
 }
 

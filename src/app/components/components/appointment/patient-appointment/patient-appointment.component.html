@@ -66,18 +66,36 @@
       <h2>Appointment Details</h2>
 
       <form (ngSubmit)="bookAppointment()" #appointmentForm="ngForm">
-        <!-- Appointment Date -->
-        <div class="form-group">
-          <label for="appointmentDate">Appointment Date *</label>
-          <input
-            type="date"
-            id="appointmentDate"
-            name="appointmentDate"
-            [(ngModel)]="appointmentDate"
-            [min]="getTodayDate()"
-            required
-            class="form-control"
-          />
+        <!-- Appointment Date and Time Row -->
+        <div class="form-row">
+          <!-- Appointment Date -->
+          <div class="form-group">
+            <label for="appointmentDate">Appointment Date *</label>
+            <input
+              type="date"
+              id="appointmentDate"
+              name="appointmentDate"
+              [(ngModel)]="appointmentDate"
+              [min]="getTodayDate()"
+              required
+              class="form-control"
+            />
+          </div>
+
+          <!-- Appointment Time -->
+          <div class="form-group">
+            <label for="appointmentTime">Appointment Time *</label>
+            <input
+              type="time"
+              id="appointmentTime"
+              name="appointmentTime"
+              [(ngModel)]="appointmentTime"
+              [min]="getMinTime()"
+              required
+              class="form-control"
+            />
+            <small class="form-hint">Business hours: 8:00 AM - 6:00 PM</small>
+          </div>
         </div>
 
         <!-- Appointment Type -->

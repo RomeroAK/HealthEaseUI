@@ -79,21 +79,7 @@ export class DoctorService {
       catchError(this.handleError)
     );
   }
-  getAvailableTimeSlots(doctorId: number, date1: Date): void{
-    const dateStr = date1.toISOString().split('T')[0];
-    this.http.get<ApiResponseDto>(`${this.apiUrl}/${doctorId}/doctor/appointments/available-slots`, {
-      headers: this.getHeaders(),
-      params: new HttpParams().set('date', dateStr)
-    }).pipe(
-      map(response => response.data as string[]),
-      catchError(this.handleError)
-    ).subscribe({
-      next: (slots) => {
-        console.log('Available slots:', slots);
-      },
-      error: (error) => {
-        console.error('Error fetching available slots:', error);
-      }
-    });
-  }
+
+
+
 }

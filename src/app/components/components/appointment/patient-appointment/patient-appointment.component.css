@@ -1,3 +1,10 @@
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .appointment-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -162,6 +169,13 @@
 }
 
 /* Form Styles */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -195,33 +209,20 @@ textarea.form-control {
   min-height: 120px;
 }
 
+.form-hint {
+  display: block;
+  margin-top: 0.25rem;
+  color: #6c757d;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
 .char-count {
   display: block;
   text-align: right;
   color: #6c757d;
   font-size: 0.875rem;
   margin-top: 0.25rem;
-}
-
-/* Patient Info Summary */
-.patient-info-summary {
-  background-color: #e3f2fd;
-  border-left: 4px solid #3498db;
-  padding: 1rem 1.5rem;
-  margin: 1.5rem 0;
-  border-radius: 6px;
-}
-
-.patient-info-summary h3 {
-  color: #2c3e50;
-  font-size: 1rem;
-  margin: 0 0 0.75rem 0;
-}
-
-.patient-info-summary p {
-  margin: 0.5rem 0;
-  color: #555;
-  font-size: 0.9rem;
 }
 
 /* Form Actions */
@@ -290,6 +291,10 @@ textarea.form-control {
   .doctor-header-section {
     flex-direction: column;
     text-align: center;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
   }
 
   .form-actions {

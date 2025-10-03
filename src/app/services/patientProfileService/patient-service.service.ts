@@ -238,6 +238,10 @@ export class PatientServiceService {
     return this.http.get<ApiResponseDto>(`${this.apiUrl}/service/${userId}/patient/doctors/get-by-license/${licenseNumber}`);
   }
 
+  getDoctorsByConsultationFee(userId: number | undefined, consultationFee: string): Observable<ApiResponseDto> {
+    return this.http.get<ApiResponseDto>(`${this.apiUrl}/service/${userId}/patient/doctors/get-by-consultationfee/${consultationFee}`);
+  }
+
   getEmergencyContacts(): Observable<EmergencyContact[]> {
     return this.http.get<EmergencyContact[]>(`${this.apiUrl}/${this.currentPatientId}/patient/emergency-contacts`, {
       headers: this.getHeaders()

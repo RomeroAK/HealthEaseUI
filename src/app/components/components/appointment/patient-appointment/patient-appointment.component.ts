@@ -16,6 +16,7 @@ export class PatientAppointmentComponent implements OnInit {
 
   // Form fields
   appointmentDate = '';
+  appointmentTime = '';
   appointmentType = 'IN_PERSON';
   reason = '';
 
@@ -72,6 +73,8 @@ export class PatientAppointmentComponent implements OnInit {
     this.error = null;
     this.successMessage = null;
 
+    const appointmentDateTime = `${this.appointmentDate}T${this.appointmentTime}:00`;
+
     const appointmentBookingRequest: AppointmentBookingRequest = {
       appointmentInfo: {
         id: null,
@@ -92,7 +95,7 @@ export class PatientAppointmentComponent implements OnInit {
           practiceName: this.doctor.practiceName,
           primarySpecialization: this.doctor.specialization
         },
-        appointmentDate: this.appointmentDate,
+        appointmentDate: appointmentDateTime,
         appointmentType: this.appointmentType,
         status: 'PENDING',
         reason: this.reason
@@ -158,6 +161,21 @@ export class PatientAppointmentComponent implements OnInit {
   getTodayDate(): string {
     const today = new Date();
     return today.toISOString().split('T')[0];
+  }
+
+  getMinTime(): string {
+    const today = new Date();
+    const selectedDate = new Date(this.appointmentDate);
+
+    // If selected date is today, set minimum time to current time
+    if (this.appointmentDate === this.getTodayDate()) {
+      const hours = String(today.getHours()).padStart(2, '0');
+      const minutes = String(today.getMinutes()).padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+
+    // Otherwise, allow any time from 8 AM
+    return '08:00';
   }
 }
 

@@ -1,5 +1,35 @@
 <div class="dashboard-container">
-  <h1>Patient Dashboard</h1>
+  <!-- Navbar -->
+  <nav class="dashboard-navbar">
+    <div class="navbar-left">
+      <button class="nav-back-btn" (click)="goBack()" title="Go back">
+        <span class="back-icon">←</span>
+        <span class="back-text">Back</span>
+      </button>
+      <div class="navbar-brand">
+        <span class="brand-icon">🏥</span>
+        <span class="brand-text">HealthCare</span>
+      </div>
+    </div>
+
+    <div class="navbar-center">
+      <h1 class="navbar-title">Patient Dashboard</h1>
+    </div>
+
+    <div class="navbar-right">
+      <button class="nav-profile-btn" (click)="viewProfile()" title="View Profile">
+        <span class="profile-icon">👤</span>
+        <span class="profile-text">Profile</span>
+      </button>
+
+      <div class="user-info">
+        <div class="user-avatar">
+          {{ username }}
+        </div>
+        <span class="username">{{ username }}</span>
+      </div>
+    </div>
+  </nav>
 
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
@@ -144,6 +174,11 @@
               <span class="value">{{ doctor.phoneNumber }}</span>
             </div>
 
+            <div class="info-row">
+              <span class="label">Email:</span>
+              <span class="value">{{ doctor.email }}</span>
+            </div>
+
             <div *ngIf="doctor.bio" class="doctor-bio">
               <p>{{ doctor.bio }}</p>
             </div>
@@ -163,6 +198,7 @@
 
           <div class="doctor-footer">
             <button class="btn-book" (click)="bookAppointment(doctor)">Book Appointment</button>
+            <button class="btn-view">View Profile</button>
           </div>
         </div>
       </div>
@@ -170,5 +206,62 @@
 
   </div>
 
-  <button class="btn btn-light text-danger fw-bold" (click)="logout()">Logout</button>
+  <!-- Floating Chatbot Button -->
+  <button class="chatbot-float-btn" (click)="toggleChatbot()" *ngIf="!isChatbotOpen">
+    <span class="chatbot-icon">💬</span>
+    <span class="chatbot-badge">AI</span>
+  </button>
+
+  <!-- Chatbot Pop-up -->
+  <div class="chatbot-popup" *ngIf="isChatbotOpen">
+    <div class="chatbot-header">
+      <div class="chatbot-title">
+        <span class="chatbot-avatar">🤖</span>
+        <div>
+          <h3>AI Health Assistant</h3>
+          <p class="chatbot-status">Online</p>
+        </div>
+      </div>
+      <button class="chatbot-close-btn" (click)="closeChatbot()">✕</button>
+    </div>
+
+    <div class="chatbot-body">
+      <div *ngFor="let message of chatMessages"
+           [ngClass]="message.sender === 'user' ? 'message-user' : 'message-bot'"
+           class="chat-message">
+        <div class="message-content">
+          <p>{{ message.text }}</p>
+          <span class="message-time">{{ formatMessageTime(message.timestamp) }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="isChatbotLoading" class="message-bot chat-message">
+        <div class="message-content">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chatbot-footer">
+      <input
+        type="text"
+        [(ngModel)]="userMessage"
+        placeholder="Type your message..."
+        class="chatbot-input"
+        (keyup.enter)="sendMessage()"
+        [disabled]="isChatbotLoading"
+      />
+      <button
+        class="chatbot-send-btn"
+        (click)="sendMessage()"
+        [disabled]="isChatbotLoading || !userMessage.trim()"
+      >
+        ➤
+      </button>
+    </div>
+  </div>
 </div>
