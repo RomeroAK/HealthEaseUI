@@ -3,6 +3,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {AuthService} from '../authService/auth.service';
+import { environment } from '../../../environments/environment';
 
 export interface ChatSession {
   id: string;
@@ -37,7 +38,7 @@ export interface ChatbotResponse {
   providedIn: 'root'
 })
 export class ChatbotService {
-  private apiUrl = 'http://localhost:5001/api/chatbot';
+  private apiUrl = `${environment.apiUrl}/api/chatbot/openai/service`;
   private currentSessionSubject = new BehaviorSubject<ChatSession | null>(null);
   public currentSession$ = this.currentSessionSubject.asObservable();
   public currentUserId ;
@@ -67,14 +68,10 @@ export class ChatbotService {
   // CHAT SESSION MANAGEMENT
   // =======================
 
-  startChatSession(): Observable<ChatSession> {
-    return this.http.post<ChatSession>(
-      `${this.apiUrl}/${this.currentUserId}/chatbot/start-session`,
-      {},
+  startChatSession(): Observable<string> {
+    return this.http.get<string>(
+      `${this.apiUrl}/${this.currentUserId}/ask`,
       { headers: this.getHeaders() }
-    ).pipe(
-      tap(session => this.currentSessionSubject.next(session)),
-      catchError(this.handleError)
     );
   }
 

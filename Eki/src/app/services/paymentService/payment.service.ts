@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AuthService} from '../authService/auth.service';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface PaymentRequest {
   appointmentId: string;
@@ -24,7 +25,7 @@ export interface Payment {
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:5001/api/payments';
+  private apiUrl = `${environment.apiUrl}/api/payments`;
   public currentUserId;
 
   constructor(

@@ -16,8 +16,6 @@ export class PatientAppointmentComponent implements OnInit {
   appointments: Appointment[] = [];
   activeTab: 'upcoming' | 'past' = 'upcoming';
   loading = false;
-  showAddAppointmentModal = false;
-  selectedDoctorId: number | null = null;
 
   constructor(
     private appointmentService: AppointmentService,
@@ -78,21 +76,8 @@ export class PatientAppointmentComponent implements OnInit {
     this.router.navigate(['/appointments', appointmentId]);
   }
 
-  openAddAppointmentModal(doctorId?: number): void {
-    this.selectedDoctorId = doctorId || null;
-    this.showAddAppointmentModal = true;
-  }
-
-  closeAddAppointmentModal(refresh: boolean = false): void {
-    this.showAddAppointmentModal = false;
-    this.selectedDoctorId = null;
-    if (refresh) {
-      this.loadAppointments();
-    }
-  }
-
   bookNewAppointment(): void {
-    this.openAddAppointmentModal();
+   this.router.navigate(['patient/patient-dashboard'], { fragment: 'available-doctors' });
   }
 
   getStatusColor(status: string): string {

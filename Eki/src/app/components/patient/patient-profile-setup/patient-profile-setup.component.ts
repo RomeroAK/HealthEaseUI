@@ -24,7 +24,7 @@ export class PatientProfileSetupComponent implements OnInit {
 
   // Step validation flags
   personalInfoValid = false;
-  medicalInfoValid = false;
+  medicalHistoryValid = false;
   emergencyContactsValid = false;
   insuranceInfoValid = false;
 
@@ -97,7 +97,7 @@ export class PatientProfileSetupComponent implements OnInit {
       }),
 
       // Step 2: Medical Information
-      medicalInfo: this.fb.group({
+      medicalHistory: this.fb.group({
         bloodType: [''],
         height: ['', [Validators.min(50), Validators.max(300)]],
         weight: ['', [Validators.min(20), Validators.max(500)]],
@@ -195,19 +195,19 @@ export class PatientProfileSetupComponent implements OnInit {
 
   // Form Array Getters
   get allergies(): FormArray {
-    return this.profileForm.get('medicalInfo.allergies') as FormArray;
+    return this.profileForm.get('medicalHistory.allergies') as FormArray;
   }
 
   get chronicConditions(): FormArray {
-    return this.profileForm.get('medicalInfo.chronicConditions') as FormArray;
+    return this.profileForm.get('medicalHistory.chronicConditions') as FormArray;
   }
 
   get currentMedications(): FormArray {
-    return this.profileForm.get('medicalInfo.currentMedications') as FormArray;
+    return this.profileForm.get('medicalHistory.currentMedications') as FormArray;
   }
 
   get previousSurgeries(): FormArray {
-    return this.profileForm.get('medicalInfo.previousSurgeries') as FormArray;
+    return this.profileForm.get('medicalHistory.previousSurgeries') as FormArray;
   }
 
   get emergencyContactsArray(): FormArray {
@@ -339,13 +339,91 @@ export class PatientProfileSetupComponent implements OnInit {
     });
   }
 
+  /**
+   * Ensures all fields are initialized for editing, even if missing/null from API
+   */
+  normalizePatient(patient: any): any {
+    return {
+      id: patient.id ?? null,
+      userId: patient.userId ?? null,
+      firstName: patient.firstName ?? '',
+      lastName: patient.lastName ?? '',
+      email: patient.email ?? '',
+      phoneNumber: patient.phoneNumber ?? '',
+      alternatePhoneNumber: patient.alternatePhoneNumber ?? '',
+      dateOfBirth: patient.dateOfBirth ?? '',
+      gender: patient.gender ?? '',
+      idNumber: patient.idNumber ?? '',
+      maritalStatus: patient.maritalStatus ?? '',
+      employer: patient.employer ?? '',
+      occupation: patient.occupation ?? '',
+      profilePicture: patient.profilePicture ?? null,
+      address: {
+        street: patient.address?.street ?? '',
+        suburb: patient.address?.suburb ?? '',
+        city: patient.address?.city ?? '',
+        province: patient.address?.province ?? '',
+        postalCode: patient.address?.postalCode ?? '',
+        country: patient.address?.country ?? '',
+      },
+      insurance: patient.insurance ?? {
+        provider: '',
+        policyNumber: '',
+        planName: '',
+        groupNumber: '',
+        effectiveDate: '',
+        expirationDate: '',
+        copayAmount: '',
+        deductibleAmount: '',
+        secondaryProvider: '',
+        secondaryPolicyNumber: '',
+        dependentCode: '',
+        authorizationRequired: false,
+      },
+      medicalAidNumber: patient.medicalAidNumber ?? '',
+      medicalHistory: {
+        bloodType: patient.medicalHistory?.bloodType ?? '',
+        height: patient.medicalHistory?.height ?? null,
+        weight: patient.medicalHistory?.weight ?? null,
+        smokingStatus: patient.medicalHistory?.smokingStatus ?? '',
+        alcoholConsumption: patient.medicalHistory?.alcoholConsumption ?? '',
+        exerciseFrequency: patient.medicalHistory?.exerciseFrequency ?? '',
+        dietaryRestrictions: patient.medicalHistory?.dietaryRestrictions ?? '',
+        allergies: patient.medicalHistory?.allergies ?? [],
+        chronicConditions: patient.medicalHistory?.chronicConditions ?? [],
+        currentMedications: patient.medicalHistory?.currentMedications ?? [],
+        previousSurgeries: patient.medicalHistory?.previousSurgeries ?? [],
+        familyMedicalHistory: patient.medicalHistory?.familyMedicalHistory ?? '',
+        vaccinationStatus: patient.medicalHistory?.vaccinationStatus ?? '',
+      },
+      emergencyContacts: patient.emergencyContacts ?? [],
+      preferences: {
+        preferredDoctorGender: patient.preferences?.preferredDoctorGender ?? '',
+        preferredLanguage: patient.preferences?.preferredLanguage ?? 'English',
+        communicationPreferences: patient.preferences?.communicationPreferences ?? {
+          emailReminders: false,
+          smsReminders: false,
+          appointmentConfirmations: false,
+          testResults: false,
+          promotionalEmails: false,
+        },
+        privacySettings: patient.preferences?.privacySettings ?? {
+          shareDataWithResearch: false,
+          allowMarketingCommunication: false,
+          profileVisibility: 'Private',
+        }
+      },
+    };
+  }
+
   loadExistingProfile(): void {
     const currentUser = this.authService.currentUser$;
     if (currentUser) {
       this.patientService.getProfile().subscribe({
         next: (patient): void => {
           if (patient) {
-            this.populateForm(patient);
+            const normalizedPatient = this.normalizePatient(patient);
+            this.populateForm(normalizedPatient);
           }
         },
         error: (error): void => {
@@ -362,6 +440,7 @@ export class PatientProfileSetupComponent implements OnInit {
         firstName: patient.firstName,
         lastName: patient.lastName,
         dateOfBirth: patient.dateOfBirth,
+        gender: patient.gender,
         phoneNumber: patient.phoneNumber,
         alternatePhoneNumber: patient.alternatePhoneNumber,
         idNumber: patient.idNumber,
@@ -369,9 +448,24 @@ export class PatientProfileSetupComponent implements OnInit {
         occupation: patient.occupation,
         employer: patient.employer,
         maritalStatus: patient.maritalStatus,
-        preferredLanguage: patient.preferredLanguage
+        preferredLanguage: patient.preferences?.preferredLanguage ?? 'English'
       },
-      preferences: patient.preferences
+      preferences: {
+        preferredDoctorGender: patient.preferences?.preferredDoctorGender ?? '',
+        preferredLanguage: patient.preferences?.preferredLanguage ?? 'English',
+        communicationPreferences: {
+          emailReminders: patient.preferences?.communicationPreferences?.emailReminders ?? true,
+          smsReminders: patient.preferences?.communicationPreferences?.smsReminders ?? true,
+          appointmentConfirmations: patient.preferences?.communicationPreferences?.appointmentConfirmations ?? true,
+          testResults: patient.preferences?.communicationPreferences?.testResults ?? true,
+          promotionalEmails: patient.preferences?.communicationPreferences?.promotionalEmails ?? false
+        },
+        privacySettings: {
+          shareDataWithResearch: patient.preferences?.privacySettings?.shareDataWithResearch ?? false,
+          allowMarketingCommunication: patient.preferences?.privacySettings?.allowMarketingCommunication ?? false,
+          profileVisibility: patient.preferences?.privacySettings?.profileVisibility ?? 'private'
+        }
+      }
     });
 
     // Populate emergency contacts
@@ -379,6 +473,82 @@ export class PatientProfileSetupComponent implements OnInit {
       this.emergencyContactsArray.clear();
       patient.emergencyContacts.forEach(contact => {
         this.emergencyContactsArray.push(this.fb.group(contact));
+      });
+    }
+
+    // Populate medical info
+    if (patient.medicalHistory) {
+      // Patch primitive fields except vaccinationStatus
+      this.profileForm.get('medicalHistory')?.patchValue({
+        bloodType: patient.medicalHistory.bloodType,
+        height: patient.medicalHistory.height,
+        weight: patient.medicalHistory.weight,
+        smokingStatus: patient.medicalHistory.smokingStatus,
+        alcoholConsumption: patient.medicalHistory.alcoholConsumption,
+        exerciseFrequency: patient.medicalHistory.exerciseFrequency,
+        dietaryRestrictions: patient.medicalHistory.dietaryRestrictions,
+        familyMedicalHistory: patient.medicalHistory.familyMedicalHistory
+      });
+
+      // Vaccination Status (parse comma-separated string)
+      const vaccinationString = patient.medicalHistory.vaccinationStatus || '';
+      const vaccinations = vaccinationString.split(',').map((v: any) => v.trim().toLowerCase()).filter(Boolean);
+      const knownVaccines = {
+        covid19: ['covid-19', 'covid19', 'covid'],
+        flu: ['flu', 'influenza'],
+        hepatitisB: ['hepatitis b', 'hepatitisb', 'hep b', 'hepb'],
+        tetanus: ['tetanus']
+      };
+      const vaccinationFormValue: any = {
+        covid19: false,
+        flu: false,
+        hepatitisB: false,
+        tetanus: false,
+        other: ''
+      };
+      const others: string[] = [];
+      vaccinations.forEach((vac: any) => {
+        let matched = false;
+        for (const [key, aliases] of Object.entries(knownVaccines)) {
+          if (aliases.includes(vac)) {
+            vaccinationFormValue[key] = true;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) {
+          others.push(vac);
+        }
+      });
+      vaccinationFormValue.other = others.join(', ');
+      this.profileForm.get('medicalHistory.vaccinationStatus')?.patchValue(vaccinationFormValue);
+
+      // Allergies
+      this.allergies.clear();
+      (patient.medicalHistory.allergies || []).forEach((allergy: any) => {
+        this.allergies.push(this.createMedicalItemGroup());
+        this.allergies.at(this.allergies.length - 1).patchValue(allergy);
+      });
+
+      // Chronic Conditions
+      this.chronicConditions.clear();
+      (patient.medicalHistory.chronicConditions || []).forEach((condition: any) => {
+        this.chronicConditions.push(this.createMedicalItemGroup());
+        this.chronicConditions.at(this.chronicConditions.length - 1).patchValue(condition);
+      });
+
+      // Current Medications
+      this.currentMedications.clear();
+      (patient.medicalHistory.currentMedications || []).forEach((medication: any) => {
+        this.currentMedications.push(this.createMedicalItemGroup());
+        this.currentMedications.at(this.currentMedications.length - 1).patchValue(medication);
+      });
+
+      // Previous Surgeries
+      this.previousSurgeries.clear();
+      (patient.medicalHistory.previousSurgeries || []).forEach((surgery: any) => {
+        this.previousSurgeries.push(this.createMedicalItemGroup());
+        this.previousSurgeries.at(this.previousSurgeries.length - 1).patchValue(surgery);
       });
     }
 
@@ -411,8 +581,8 @@ export class PatientProfileSetupComponent implements OnInit {
   }
 
   calculateBMI(): number | null {
-    const height = this.profileForm.get('medicalInfo.height')?.value;
-    const weight = this.profileForm.get('medicalInfo.weight')?.value;
+    const height = this.profileForm.get('medicalHistory.height')?.value;
+    const weight = this.profileForm.get('medicalHistory.weight')?.value;
 
     if (height && weight) {
       const heightInMeters = height / 100;
@@ -449,11 +619,11 @@ export class PatientProfileSetupComponent implements OnInit {
     return {
       personalInfo: formValue.personalInfo,
       medicalHistory: {
-        ...formValue.medicalInfo,
-        allergies: formValue.medicalInfo.allergies,
-        chronicConditions: formValue.medicalInfo.chronicConditions,
-        currentMedications: formValue.medicalInfo.currentMedications,
-        previousSurgeries: formValue.medicalInfo.previousSurgeries
+        ...formValue.medicalHistory,
+        allergies: formValue.medicalHistory.allergies,
+        chronicConditions: formValue.medicalHistory.chronicConditions,
+        currentMedications: formValue.medicalHistory.currentMedications,
+        previousSurgeries: formValue.medicalHistory.previousSurgeries
       },
       emergencyContacts: formValue.emergencyContacts,
       insurance: formValue.insuranceInfo.hasInsurance ? formValue.insuranceInfo.primaryInsurance : null,

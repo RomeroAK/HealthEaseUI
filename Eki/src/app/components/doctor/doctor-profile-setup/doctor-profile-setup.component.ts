@@ -419,7 +419,7 @@ export class DoctorProfileSetupComponent implements OnInit {
       firstName: doctor.firstName,
       lastName: doctor.lastName,
       email: doctor.email,
-      phoneNumber: doctor.telephone,
+      phoneNumber: doctor.phoneNumber,
       gender: doctor.gender,
       medicalLicenseNumber: doctor.licenseNumber,
       practiceName: doctor.practiceName,

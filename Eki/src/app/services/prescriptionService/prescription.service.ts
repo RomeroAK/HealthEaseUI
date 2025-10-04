@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {Prescription} from '../../model/user.model';
+import { environment } from '../../../environments/environment';
 
 
 
@@ -12,7 +13,7 @@ import {Prescription} from '../../model/user.model';
 })
 export class PrescriptionService {
 
-  private apiUrl = 'http://localhost:5001/api/prescriptions';
+  private apiUrl = `${environment.apiUrl}/api/prescriptions`;
   private currentUserPrescriptionsSubject = new BehaviorSubject<Prescription[]>([]);
   public currentUserPrescriptions$ = this.currentUserPrescriptionsSubject.asObservable();
   public currentUserId;

@@ -92,4 +92,5 @@
   <button class="ai-button" (click)="openAiAssistant()">
     <i class="fas fa-robot"></i> AI Assistant
   </button>
+  <app-ai-chat-modal [show]="aiModalOpen" (close)="onAiModalClose()"></app-ai-chat-modal>
 </div>

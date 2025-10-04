@@ -41,6 +41,10 @@ export class FindDoctorComponent implements OnInit {
               private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.loadAllDoctors();
+  }
+
+  private loadAllDoctors() {
     this.patientService.getAllDoctors().subscribe(data => {
       this.doctors = data
     });
@@ -48,8 +52,7 @@ export class FindDoctorComponent implements OnInit {
 
   searchDoctors(): void {
     this.loading = true;
-    // Example: You may need to adjust this to match your backend API
-    this.doctorService.searchDoctors(this.searchFilters).subscribe({
+    this.patientService.searchDoctors(this.searchFilters).subscribe({
       next: (doctors: any) => {
         this.doctors = doctors || [];
         this.loading = false;
@@ -61,24 +64,10 @@ export class FindDoctorComponent implements OnInit {
     });
   }
 
-  findNearbyDoctors(): void {
-    this.loading = true;
-    // Example: You may need to implement geolocation logic
-    this.doctorService.findNearbyDoctors().subscribe({
-      next: (doctors: any) => {
-        this.doctors = doctors || [];
-        this.loading = false;
-      },
-      error: () => {
-        this.doctors = [];
-        this.loading = false;
-      }
-    });
-  }
 
   clearFilters(): void {
     this.searchFilters = { name: '', specialty: '', practiceName: '' };
-    // this.searchDoctors();
+    this.loadAllDoctors();
   }
 
   viewDoctorProfile(id: string): void {

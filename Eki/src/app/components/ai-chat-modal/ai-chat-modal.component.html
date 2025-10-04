@@ -1,0 +1,25 @@
+﻿<div class="ai-modal-backdrop" *ngIf="show">
+  <div class="ai-modal">
+    <div class="ai-modal-header">
+      <span>AI Assistant</span>
+      <button class="close-btn" (click)="onClose()">&times;</button>
+    </div>
+    <div class="ai-modal-body">
+      <div class="chat-history">
+        <div *ngFor="let msg of messages">
+          <div [ngClass]="{'ai-msg': msg.sender === 'ai', 'user-msg': msg.sender === 'user'}">
+            {{ msg.text }}
+          </div>
+        </div>
+        <div *ngIf="loading" class="ai-msg">...</div>
+      </div>
+      <form (ngSubmit)="sendMessage()" class="chat-input-row">
+        <input [(ngModel)]="userInput" name="userInput" class="chat-input" placeholder="Type your message..." autocomplete="off" [disabled]="loading" />
+        <button type="submit" class="send-btn" [disabled]="loading || !userInput.trim()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+

@@ -7,7 +7,7 @@ import {
   DoctorSpecialization,
   DoctorStatistics,
   MedicalRecord,
-  Medication,
+  Medication, PatientAppointment,
   WorkingHours
 } from '../../model/doctor.related.interfaces';
 import {catchError, map, shareReplay, tap} from 'rxjs/operators';
@@ -22,7 +22,7 @@ import {ApiResponseDto} from '../../model/ApiResponseDto';
 export class DoctorService {
 
 
-  private apiUrl = 'http://localhost:5001/api/doctors';
+  private apiUrl = `${environment.apiUrl}/api/doctors`;
   private currentDoctorSubject = new BehaviorSubject<Doctor | null>(null);
   private doctorsCache = new Map<string, Doctor>();
   private currentDoctorId;
@@ -108,15 +108,20 @@ export class DoctorService {
     });
   }
 
-  // Placeholder for searchDoctors method
-  searchDoctors(filters: any): Observable<Doctor[]> {
-    // TODO: Implement API call to search doctors by filters
+  /**
+   * Get all appointments for a doctor by doctorId
+   */
+  getDoctorAppointments(doctorId: string): Observable<PatientAppointment[]> {
+    // TODO: Implement API call to fetch all appointments for a doctor
     return of([]); // Placeholder: returns empty array
   }
 
-  // Placeholder for findNearbyDoctors method
-  findNearbyDoctors(): Observable<Doctor[]> {
-    // TODO: Implement API call to find nearby doctors
-    return of([]); // Placeholder: returns empty array
+  /**
+   * Confirm a scheduled appointment by appointmentId
+   */
+  confirmAppointment(appointmentId: string): Observable<any> {
+    // TODO: Implement API call to confirm an appointment
+    return of({ success: true }); // Placeholder: returns success
   }
+
 }

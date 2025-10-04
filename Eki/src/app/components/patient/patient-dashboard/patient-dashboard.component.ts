@@ -10,7 +10,6 @@ import {DoctorService} from '../../../services/doctorProfileService/doctor.servi
 import {Patient} from '../../../model/patient.model';
 import {PatientService} from '../../../services/patientProfileService/patient.service';
 import { ViewportScroller } from '@angular/common';
-
 @Component({
   selector: 'app-patient-dashboard',
   templateUrl: './patient-dashboard.component.html',
@@ -19,8 +18,8 @@ import { ViewportScroller } from '@angular/common';
 })
 export class PatientDashboardComponent implements OnInit {
   appointments: any[] = [];
-  doctors: any[] = [];
   user: any;
+  aiModalOpen = false;
 
   constructor(
     private router: Router,
@@ -44,14 +43,17 @@ export class PatientDashboardComponent implements OnInit {
         setTimeout(() => this.viewportScroller.scrollToAnchor(fragment), 0);
       }
     });
-
-    this.patientService.getAppointments(this.user.id).subscribe(data => this.appointments = data);
-    this.patientService.getAllDoctors().subscribe(data => this.doctors = data);
+    this.patientService.getUpcomingAppointments().subscribe(data => this.appointments = data);
   }
 
   openAiAssistant(): void {
-    alert('Launching AI Assistant...'); // Replace with actual logic or modal
+    this.aiModalOpen = true;
   }
+
+  onAiModalClose(): void {
+    this.aiModalOpen = false;
+  }
+
   showAppointments()
   {
     this.router.navigate(['/patient/appointments']);
@@ -67,6 +69,8 @@ export class PatientDashboardComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+    // Clear AI chat history on logout
+    this.aiModalOpen = false;
   }
 
   onSearchDoctors(): void {

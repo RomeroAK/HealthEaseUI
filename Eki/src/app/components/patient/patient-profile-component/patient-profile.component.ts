@@ -65,7 +65,7 @@ export class PatientProfileComponent implements OnInit {
   }
 
   editProfile(): void {
-    this.router.navigate(['/patient/profile-setup']);
+    this.router.navigate(['/patient/patient-profile-setup']);
   }
 
   calculateAge(dateOfBirth: string): number {

@@ -5,7 +5,7 @@ export interface Doctor {
   lastName: string;
   fullName: string;
   email?: string;
-  telephone: string;
+  phoneNumber: string;
   gender: string;
   specialization: string;
   licenseNumber: string;
@@ -133,6 +133,22 @@ export interface Appointment {
   createdAt: Date;
   updatedAt: Date;
   doctorName: string;
+}
+export interface PatientAppointment {
+  id: string;
+  patientId: string;
+  doctorId: string;
+  appointmentDate: Date;
+  startTime: string;
+  endTime: string;
+  type: 'initial' | 'follow_up' | 'emergency' | 'virtual';
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'no_show' | 'scheduled';
+  reason: string;
+  notes?: string;
+  fee: number;
+  createdAt: Date;
+  updatedAt: Date;
+  patientName: string;
 }
 
 export interface MedicalRecord {

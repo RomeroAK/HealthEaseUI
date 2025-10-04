@@ -3,6 +3,7 @@ import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AuthService} from '../authService/auth.service';
 import {catchError, tap} from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface Notification {
   id: string;
@@ -17,7 +18,7 @@ export interface Notification {
   providedIn: 'root'
 })
 export class NotificationService {
-  private apiUrl = 'http://localhost:5001/api/notifications';
+  private apiUrl = `${environment.apiUrl}/api/notifications`;
   private notificationsSubject = new BehaviorSubject<Notification[]>([]);
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public notifications$ = this.notificationsSubject.asObservable();

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { AppointmentModel } from '../../../model/appointment.model';
 import { Doctor } from '../../../model/doctor.model';
 import {AuthService} from '../../../services/authService/auth.service';
+import {AppointmentService} from '../../../services/appointmentService/appointment.service';
 
 function futureDateValidator(control: AbstractControl): ValidationErrors | null {
   if (!control.value) return null;
@@ -37,7 +38,8 @@ export class AddAppointmentComponent implements OnInit {
   todayString: string = new Date().toISOString().split('T')[0];
 
   constructor(private fb: FormBuilder,
-              private authService: AuthService,) {
+              private authService: AuthService,
+              private appointmentService: AppointmentService) {
     this.appointmentForm = this.fb.group({
       doctorId: [null, Validators.required],
       patientId: [null, Validators.required],
@@ -65,9 +67,12 @@ export class AddAppointmentComponent implements OnInit {
   onSubmit() {
     if (this.appointmentForm.valid) {
       const formValue = this.appointmentForm.value;
-      //TODO: Call service to save appointment
-      console.log('Appointment Data:', formValue);
-      this.finishAndClose();
+      this.appointmentService.bookAppointment(formValue).subscribe(
+        response => {
+          console.log('Appointment booked successfully:', response);
+          this.finishAndClose();
+        }
+      )
     }
   }
 

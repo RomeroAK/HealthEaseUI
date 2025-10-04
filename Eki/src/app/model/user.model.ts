@@ -127,21 +127,10 @@ export interface LocationData {
   longitude: number;
 }
 
-export interface DoctorSearchFilters {
-  searchTerm?: string;
-  specialization?: string;
-  city?: string;
-  province?: string;
-  maxDistance?: number;
-  availableToday?: boolean;
-  acceptsInsurance?: string;
-  minRating?: number;
-  maxFee?: number;
-  gender?: string;
-  location?: LocationData;
-  languages?: string[];
-  availableDays?: string[];
-  timeRange?: { startTime: string; endTime: string };
+export interface DoctorSearchFilters  {
+  name: string,
+  specialty: string,
+  practiceName: string
 }
 
 export interface DoctorSearchResult extends Doctor {

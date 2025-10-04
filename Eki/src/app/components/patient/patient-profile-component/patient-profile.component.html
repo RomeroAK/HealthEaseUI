@@ -22,16 +22,16 @@
     <!-- Profile Header -->
     <div class="profile-header">
       <div class="profile-header-content">
-        <div class="profile-picture-section">
-          <div class="profile-picture" *ngIf="patientProfile.profilePicture; else defaultAvatar">
-            <img [src]="patientProfile.profilePicture" [alt]="patientProfile.firstName + ' ' + patientProfile.lastName">
-          </div>
-          <ng-template #defaultAvatar>
-            <div class="default-avatar">
-              {{patientProfile.firstName?.charAt(0)}}{{patientProfile.lastName?.charAt(0)}}
-            </div>
-          </ng-template>
-        </div>
+<!--        <div class="profile-picture-section">-->
+<!--          <div class="profile-picture" *ngIf="patientProfile.profilePicture; else defaultAvatar">-->
+<!--            <img [src]="patientProfile.profilePicture" [alt]="patientProfile.firstName + ' ' + patientProfile.lastName">-->
+<!--          </div>-->
+<!--          <ng-template #defaultAvatar>-->
+<!--            <div class="default-avatar">-->
+<!--              {{patientProfile.firstName?.charAt(0)}}{{patientProfile.lastName?.charAt(0)}}-->
+<!--            </div>-->
+<!--          </ng-template>-->
+<!--        </div>-->
 
         <div class="profile-basic-info">
           <h1>{{patientProfile.firstName}} {{patientProfile.lastName}}</h1>
@@ -55,12 +55,12 @@
           <button class="action-btn primary" (click)="editProfile()">
             <i class="fas fa-edit"></i> Edit Profile
           </button>
-          <button class="action-btn secondary">
-            <i class="fas fa-download"></i> Download PDF
-          </button>
-          <button class="action-btn secondary" (click)="shareProfile()">
-            <i class="fas fa-share"></i> Share
-          </button>
+<!--          <button class="action-btn secondary">-->
+<!--            <i class="fas fa-download"></i> Download PDF-->
+<!--          </button>-->
+<!--          <button class="action-btn secondary" (click)="shareProfile()">-->
+<!--            <i class="fas fa-share"></i> Share-->
+<!--          </button>-->
         </div>
       </div>
 
@@ -161,7 +161,7 @@
             </div>
           </div>
 
-          <div class="info-card" *ngIf="patientProfile.address">
+          <div class="info-card full-width" *ngIf="patientProfile.address">
             <h3>Address</h3>
             <div class="address-display">
               <p>{{patientProfile.address.street}}</p>

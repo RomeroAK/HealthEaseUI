@@ -39,7 +39,7 @@
           <h3>Dr. {{ doctor.fullName }}</h3>
           <p class="specialty">{{ doctor.specialization || 'General Practice' }}</p>
           <p class="location">{{ doctor.hospitalAddress?.city }}, {{ doctor.hospitalAddress?.province }}</p>
-          <p class="fee">Consultation: R{{ doctor.consultationFees }}</p>
+          <p class="fee">Consultation: R {{ doctor.consultationFee }}</p>
         </div>
         <div class="card-actions">
           <button (click)="viewDoctorProfile(doctor.id)" class="btn-view">View Profile</button>

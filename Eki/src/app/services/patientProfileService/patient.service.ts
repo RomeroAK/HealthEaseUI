@@ -35,14 +35,15 @@ import {Patient} from '../../model/patient.model';
 import {Appointment, MedicalRecord} from '../../model/doctor.related.interfaces';
 import {DoctorDTO} from '../../model/DoctorDTO';
 import {ApiResponseDto} from '../../model/ApiResponseDto';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientService {
 
-  private apiUrl = 'http://localhost:5001/api/patients';
-  private apiDoctorUrl = 'http://localhost:5001/api/doctors';
+  private apiUrl = `${environment.apiUrl}/api/patients`;
+  private apiDoctorUrl = `${environment.apiUrl}/api/doctors`;
   private currentPatientSubject = new BehaviorSubject<Patient | null>(null);
   public currentPatient$ = this.currentPatientSubject.asObservable();
   public currentPatientId;
@@ -104,9 +105,10 @@ export class PatientService {
   }
 
   getProfile(): Observable<Patient> {
-    return this.http.get<Patient>(`${this.apiUrl}/${this.currentPatientId}/patient/profile`, {
+    return this.http.get<ApiResponseDto>(`${this.apiUrl}/${this.currentPatientId}/patient/profile`, {
       headers: this.getHeaders()
     }).pipe(
+      map(response => response.data as Patient), // 👈 Extract and cast the patient object
       tap(patient => this.currentPatientSubject.next(patient)),
       catchError(this.handleError)
     );
@@ -859,46 +861,20 @@ deleteProfilePicture(): Observable<any> {
 // =======================
 
 searchDoctors(filters: DoctorSearchFilters): Observable<DoctorSearchResult[]> {
-  let params = new HttpParams();
-
-  if (filters.searchTerm) { params = params.set('searchTerm', filters.searchTerm); }
-  if (filters.specialization) { params = params.set('specialization', filters.specialization); }
-  if (filters.city) { params = params.set('city', filters.city); }
-  if (filters.province) { params = params.set('province', filters.province); }
-  if (filters.maxDistance) { params = params.set('maxDistance', filters.maxDistance.toString()); }
-  if (filters.availableToday !== undefined) { params = params.set('availableToday', filters.availableToday.toString()); }
-  if (filters.acceptsInsurance) { params = params.set('acceptsInsurance', filters.acceptsInsurance); }
-  if (filters.minRating) { params = params.set('minRating', filters.minRating.toString()); }
-  if (filters.maxFee) { params = params.set('maxFee', filters.maxFee.toString()); }
-  if (filters.gender) { params = params.set('gender', filters.gender); }
-
-// Handle location
-  if (filters.location) {
-  params = params.set('latitude', filters.location.latitude.toString());
-  params = params.set('longitude', filters.location.longitude.toString());
-}
-
-// Handle arrays
-  if (filters.languages && filters.languages.length > 0) {
-  params = params.set('languages', filters.languages.join(','));
-}
-
-  if (filters.availableDays && filters.availableDays.length > 0) {
-  params = params.set('availableDays', filters.availableDays.join(','));
-}
-
-// Handle time range
-  if (filters.timeRange) {
-  params = params.set('startTime', filters.timeRange.startTime);
-  params = params.set('endTime', filters.timeRange.endTime);
-}
-
-  return this.http.get<DoctorSearchResult[]>(`${this.apiUrl}/${this.currentPatientId}/patient/doctors/search`, {
-  headers: this.getHeaders(),
-  params
-}).pipe(
-  catchError(this.handleError)
-);
+  return this.http.post<ApiResponseDto>(
+    `${this.apiDoctorUrl}/${this.currentPatientId}/patient/doctors/search`,
+    filters,
+    { headers: this.getHeaders() }
+  ).pipe(
+    map(response => {
+      if (response.success && Array.isArray(response.data)) {
+        return response.data as DoctorSearchResult[];
+      } else {
+        throw new Error(response.message || 'Failed to search doctors');
+      }
+    }),
+    catchError(this.handleError)
+  );
 }
 
 getDoctorById(doctorId: string): Observable<Doctor> {

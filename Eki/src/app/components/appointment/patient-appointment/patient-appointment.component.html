@@ -69,21 +69,4 @@
     </div>
   </div>
 
-  <!-- Add Appointment Modal -->
-  <div class="modal fade show" tabindex="-1" [ngStyle]="{'display': showAddAppointmentModal ? 'block' : 'none', 'background': 'rgba(0,0,0,0.5)'}" *ngIf="showAddAppointmentModal">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Book New Appointment</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeAddAppointmentModal()"></button>
-        </div>
-        <div class="modal-body">
-          <app-add-appointment
-            [doctorId]="selectedDoctorId"
-            (appointmentFinished)="closeAddAppointmentModal($event)">
-          </app-add-appointment>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

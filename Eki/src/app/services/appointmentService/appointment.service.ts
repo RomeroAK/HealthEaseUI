@@ -4,12 +4,13 @@ import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {AuthService} from '../authService/auth.service';
 import {catchError, tap} from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentService {
-  private apiUrl = 'http://localhost:5001/api/appointments';
+  private apiUrl = `${environment.apiUrl}/api/patients`;
   private currentUserAppointmentsSubject = new BehaviorSubject<Appointment[]>([]);
   public currentUserAppointments$ = this.currentUserAppointmentsSubject.asObservable();
   public currentUserId;

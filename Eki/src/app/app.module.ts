@@ -35,6 +35,7 @@ import {AiAgentComponent} from './components/ai-agent/ai-agent.component';
 import {FindDoctorComponent} from './components/patient/find-doctor/find-doctor.component';
 import {DoctorProfileComponent} from './components/doctor/doctor-profile/doctor-profile.component';
 import {AddAppointmentComponent} from './components/appointment/add-appointment/add-appointment.component';
+import {AiChatModalComponent} from './components/ai-chat-modal/ai-chat-modal.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import {AddAppointmentComponent} from './components/appointment/add-appointment/
     AiAgentComponent,
     FindDoctorComponent,
     DoctorProfileComponent,
-    AddAppointmentComponent
+    AddAppointmentComponent,
+    AiChatModalComponent
   ],
   imports: [
     BrowserModule,

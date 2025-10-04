@@ -2,7 +2,7 @@ import {Address} from './user.model';
 
 export interface Patient{
   insurance: boolean;
-  emergencyContacts: [];
+  emergencyContacts: any[];
   preferences: any;
   preferredLanguage: string;
   maritalStatus: string;
@@ -20,5 +20,5 @@ export interface Patient{
   country: string;
   medicalAidName: string;
   medicalAidNumber: string;
-  medicalHistory: [];
+  medicalHistory: any;
 }

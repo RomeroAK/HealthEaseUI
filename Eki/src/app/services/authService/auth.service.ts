@@ -6,12 +6,13 @@ import {User} from '../../model/user-main.model';
 import {LoginRequest} from '../../model/login.request';
 import {AuthResponse} from '../../model/auth.response';
 import {RegisterRequest} from '../../model/register.request';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5001/api/auth';
+  private apiUrl = `${environment.apiUrl}/api/auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
