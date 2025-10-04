@@ -1,34 +1,34 @@
 <div class="find-doctors-container">
-   <div class="search-section">
-    <div class="search-filters">
-      <input
-        type="text"
-        [(ngModel)]="searchFilters.name"
-        placeholder="Doctor name"
-        (keyup.enter)="searchDoctors()"
-        class="search-input"
-      />
+<!--   <div class="search-section">-->
+<!--    <div class="search-filters">-->
+<!--      <input-->
+<!--        type="text"-->
+<!--        [(ngModel)]="searchFilters.name"-->
+<!--        placeholder="Doctor name"-->
+<!--        (keyup.enter)="searchDoctors()"-->
+<!--        class="search-input"-->
+<!--      />-->
 
-      <select [(ngModel)]="searchFilters.specialty" (change)="searchDoctors()" class="search-select">
-        <option value="">All Specializations</option>
-        <option *ngFor="let spec of specialties" [value]="spec">
-          {{ spec }}
-        </option>
-      </select>
+<!--      <select [(ngModel)]="searchFilters.specialty" (change)="searchDoctors()" class="search-select">-->
+<!--        <option value="">All Specializations</option>-->
+<!--        <option *ngFor="let spec of specialties" [value]="spec">-->
+<!--          {{ spec }}-->
+<!--        </option>-->
+<!--      </select>-->
 
-      <input
-        type="text"
-        [(ngModel)]="searchFilters.practiceName"
-        placeholder="Practice name"
-        (keyup.enter)="searchDoctors()"
-        class="search-input"
-      />
+<!--      <input-->
+<!--        type="text"-->
+<!--        [(ngModel)]="searchFilters.practiceName"-->
+<!--        placeholder="Practice name"-->
+<!--        (keyup.enter)="searchDoctors()"-->
+<!--        class="search-input"-->
+<!--      />-->
 
-      <button (click)="searchDoctors()" class="btn-primary">Search</button>
-<!--      <button (click)="findNearbyDoctors()" class="btn-secondary">Near Me</button>-->
-      <button (click)="clearFilters()" class="btn-link">Clear</button>
-    </div>
-  </div>
+<!--      <button (click)="searchDoctors()" class="btn-primary">Search</button>-->
+<!--&lt;!&ndash;      <button (click)="findNearbyDoctors()" class="btn-secondary">Near Me</button>&ndash;&gt;-->
+<!--      <button (click)="clearFilters()" class="btn-link">Clear</button>-->
+<!--    </div>-->
+<!--  </div>-->
 
   <div *ngIf="loading" class="loading">Searching doctors...</div>
 
