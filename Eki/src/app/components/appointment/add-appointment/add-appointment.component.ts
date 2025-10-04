@@ -46,7 +46,7 @@ export class AddAppointmentComponent implements OnInit {
       appointmentDate: ['', [Validators.required, futureDateValidator]],
       reason: ['', Validators.required],
       appointmentType: ['', Validators.required],
-      status: ['pending']
+      status: ['confirmed']
     });
   }
 
