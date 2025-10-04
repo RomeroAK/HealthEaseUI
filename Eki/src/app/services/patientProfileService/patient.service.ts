@@ -995,9 +995,10 @@ getAppointmentById(appointmentId: string): Observable<Appointment> {
 }
 
 getUpcomingAppointments(): Observable<Appointment[]> {
-  return this.http.get<Appointment[]>(`${this.apiUrl}/${this.currentPatientId}/patient/appointments/upcoming`, {
+  return this.http.get<ApiResponseDto>(`${this.apiUrl}/${this.currentPatientId}/patient/appointments/upcoming`, {
     headers: this.getHeaders()
   }).pipe(
+    map(response => response.data as Appointment[]),
     catchError(this.handleError)
   );
 }

@@ -112,8 +112,11 @@ export class DoctorService {
    * Get all appointments for a doctor by doctorId
    */
   getDoctorAppointments(doctorId: string): Observable<PatientAppointment[]> {
-    // TODO: Implement API call to fetch all appointments for a doctor
-    return of([]); // Placeholder: returns empty array
+    return this.http.get<PatientAppointment[]>(`${this.apiUrl}/${doctorId}/doctor/appointments/get-all`, {
+      headers: this.getHeaders()
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   /**

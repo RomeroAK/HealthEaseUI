@@ -43,7 +43,9 @@ export class PatientDashboardComponent implements OnInit {
         setTimeout(() => this.viewportScroller.scrollToAnchor(fragment), 0);
       }
     });
-    this.patientService.getUpcomingAppointments().subscribe(data => this.appointments = data);
+    this.patientService.getUpcomingAppointments().subscribe(data => {
+      this.appointments = data
+    });
   }
 
   openAiAssistant(): void {
